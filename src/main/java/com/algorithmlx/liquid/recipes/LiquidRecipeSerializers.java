@@ -16,7 +16,7 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.jetbrains.annotations.Nullable;
 
 public class LiquidRecipeSerializers<T extends LiquidRecipes> extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<T> {
-    private final SerializerFactory<T> serializerFactory;
+    public final SerializerFactory<T> serializerFactory;
 
     public LiquidRecipeSerializers(SerializerFactory<T> serializerFactory) {
         this.serializerFactory = serializerFactory;
@@ -59,7 +59,7 @@ public class LiquidRecipeSerializers<T extends LiquidRecipes> extends ForgeRegis
     public void toNetwork(FriendlyByteBuf pBuffer, T pRecipe) {
         pRecipe.ingredient.toNetwork(pBuffer);
         pBuffer.writeItem(pRecipe.result);
-        pBuffer.writeFloat(pRecipe.xp);
+        pBuffer.writeFloat(pRecipe.experience);
         pBuffer.writeVarInt(pRecipe.time);
     }
 
@@ -67,7 +67,7 @@ public class LiquidRecipeSerializers<T extends LiquidRecipes> extends ForgeRegis
         return this.serializerFactory;
     }
 
-    private interface SerializerFactory<T extends LiquidRecipes> {
+    public interface SerializerFactory<T extends LiquidRecipes> {
         T create(ResourceLocation id, Ingredient ingredient, ItemStack result, float xp, int time);
     }
 }

@@ -11,28 +11,28 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
 public abstract class LiquidRecipes implements Recipe<Container> {
-    protected final RecipeType<?> recipeType;
-    protected final ResourceLocation resourceLocation;
+    protected final RecipeType<?> type;
+    protected final ResourceLocation id;
     protected final Ingredient ingredient;
     protected final ItemStack result;
-    protected final float xp;
+    protected final float experience;
     protected final int time;
 
-    public LiquidRecipes(RecipeType<?> recipeType, ResourceLocation id, Ingredient ingredient, ItemStack result, float xp, int time) {
-        this.recipeType = recipeType;
-        this.resourceLocation = id;
-        this.ingredient = ingredient;
-        this.result = result;
-        this.xp = xp;
+    public LiquidRecipes(RecipeType<?> typeIn, ResourceLocation idIn, Ingredient ingredientIn, ItemStack resultIn, float experienceIn, int time) {
+        this.type = typeIn;
+        this.id = idIn;
+        this.ingredient = ingredientIn;
+        this.result = resultIn;
+        this.experience = experienceIn;
         this.time = time;
     }
 
     public LiquidRecipes(RecipeType<?> typeIn, ResourceLocation idIn, Ingredient ingredientIn, ItemStack resultIn) {
-        this.recipeType = typeIn;
-        this.resourceLocation = idIn;
+        this.type = typeIn;
+        this.id = idIn;
         this.ingredient = ingredientIn;
         this.result = resultIn;
-        this.xp = 0;
+        this.experience = 0;
         this.time = 0;
     }
 
@@ -56,14 +56,14 @@ public abstract class LiquidRecipes implements Recipe<Container> {
         return this.result.copy();
     }
 
-    @Override
     public NonNullList<Ingredient> getIngredients() {
         NonNullList<Ingredient> nonNull = NonNullList.create();
         nonNull.add(this.ingredient);
         return nonNull;
     }
-    public float getXP() {
-        return this.xp;
+
+    public float getExperience() {
+        return this.experience;
     }
 
     public ItemStack getResult() {
@@ -76,22 +76,22 @@ public abstract class LiquidRecipes implements Recipe<Container> {
 
     @Override
     public ResourceLocation getId() {
-        return this.resourceLocation;
+        return this.id;
     }
 
     @Override
     public RecipeType<?> getType() {
-        return this.recipeType;
+        return this.type;
     }
 
     @Override
     public String toString() {
-        return "LiquidRecipes {" +
-                "recipeType=" + recipeType +
-                ", resourceLocation=" + resourceLocation +
+        return "LiquidRecipes{" +
+                "type=" + type +
+                ", id=" + id +
                 ", ingredient=" + ingredient +
                 ", result=" + result +
-                ", xp=" + xp +
+                ", experience=" + experience +
                 ", time=" + time +
                 '}';
     }
