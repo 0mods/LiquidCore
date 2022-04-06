@@ -1,11 +1,12 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "com.algorithmlx.liquid.mixin",
+  "package": "core.liquid.mixin",
   "compatibilityLevel": "JAVA_17",
   "refmap": "liquid.refmap.json",
   "mixins": [
-    "MenuTypeMixin"
+    "MenuTypeMixin",
+    "ModProcessorMixin"
   ],
   "client": [
     "MenuScreensMixin"
