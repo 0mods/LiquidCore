@@ -12,18 +12,18 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = FMLModContainer.class, remap = false)
-public abstract class ModProcessorMixin {
+public abstract class FMLModContainerMixin {
     @Shadow @Final
-    private ModFileScanData scanResults;
-    @Shadow
-    public abstract Object getMod();
+    private Class<?> modClass;
 
-    @Inject(method = "constructMod", at = @At(value = "TAIL"))
+    @Shadow(remap = false) @Final
+    private ModFileScanData scanResults;
+
+    @Inject(method = "constructMod", at = @At(value = "TAIL"), remap = false)
     public void fmlModConstructingHook(CallbackInfo ci) {
         FMLModContainer modContainer = (FMLModContainer) (Object) this;
-        Object mod = this.getMod();
         String modId = modContainer.getModId();
-        if (mod instanceof LiquidMod) {
+        if (modClass.isAnnotationPresent(LiquidMod.class)) {
             CustomModProcessor.run(scanResults, modId);
         }
     }

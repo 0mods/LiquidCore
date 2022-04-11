@@ -5,8 +5,8 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "liquid.refmap.json",
   "mixins": [
-    "MenuTypeMixin",
-    "ModProcessorMixin"
+    "FMLModContainerMixin",
+    "MenuTypeMixin"
   ],
   "client": [
     "MenuScreensMixin"

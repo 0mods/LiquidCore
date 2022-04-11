@@ -76,7 +76,6 @@ public class CustomModProcessor {
                                         Object someObject = field.get(null);
 
                                         if (someObject instanceof LiquidBlockBase block) {
-
                                             BLOCKS.register(regName, () -> block);
                                             ITEMS.register(regName, () -> new BlockItem(block, block.itemProperties()));
                                         } else if (someObject instanceof Item item) {
@@ -85,10 +84,8 @@ public class CustomModProcessor {
                                                 AutoModel.genModels.add(new ResourceLocation(modId, regName));
                                             }
                                         } else if (someObject instanceof BlockEntityType<?> tile) {
-
                                             TILES.register(regName, () -> tile);
                                         } else if (someObject instanceof SoundEvent sound) {
-
                                             SOUNDS.register(regName, () -> sound);
                                             if (someObject instanceof EntityType<?>) {
                                                 ENTITIES.register(regName, () -> (EntityType<?>) someObject);

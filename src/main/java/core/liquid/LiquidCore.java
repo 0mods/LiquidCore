@@ -7,8 +7,9 @@ import net.minecraftforge.fml.common.Mod;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+@LiquidMod
 @Mod(LiquidCore.ModId)
-public class LiquidCore implements LiquidMod {
+public class LiquidCore {
     public static final Logger log = LogManager.getLogger(LiquidCore.class);
     public static final String ModId = "liquid";
 

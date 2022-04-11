@@ -11,7 +11,7 @@ import java.io.*;
 import java.util.*;
 import java.util.function.BooleanSupplier;
 import java.util.function.Predicate;
-
+//офигеть, это же коментарии в коде!
 public class AutoModel implements PackResources {
     public static List<ResourceLocation> genModels = new ArrayList<>();
     static AutoModel packInstance;
