@@ -2,6 +2,7 @@ package core.liquid.settings;
 
 import core.liquid.network.messages.LiquidPacket;
 import core.liquid.objects.annotations.NetworkDirectionPacket;
+import core.liquid.objects.annotations.NotWorking;
 import core.liquid.objects.annotations.Register;
 import core.liquid.objects.annotations.Config;
 import core.liquid.objects.client.AutoModel;
@@ -33,6 +34,7 @@ import java.util.Locale;
 
 import static net.minecraftforge.registries.DeferredRegister.*;
 
+@NotWorking
 public class CustomModProcessor {
     private static final Type REGISTRATION = Type.getType(Register.class);
     private static final Type NETWORK_DIRECTION = Type.getType(NetworkDirectionPacket.class);

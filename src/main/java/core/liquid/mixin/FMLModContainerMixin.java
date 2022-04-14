@@ -1,5 +1,6 @@
 package core.liquid.mixin;
 
+import core.liquid.objects.annotations.NotWorking;
 import core.liquid.settings.CustomModProcessor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLModContainer;
@@ -11,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+@NotWorking
 @Mixin(value = FMLModContainer.class, remap = false)
 public abstract class FMLModContainerMixin {
     @Shadow @Final
