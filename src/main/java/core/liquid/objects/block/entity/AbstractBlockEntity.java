@@ -1,4 +1,4 @@
-package core.liquid.helper.block;
+package core.liquid.objects.block.entity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

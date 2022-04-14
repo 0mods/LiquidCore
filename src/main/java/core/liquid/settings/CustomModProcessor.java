@@ -38,8 +38,8 @@ public class CustomModProcessor {
     private static final Type NETWORK_DIRECTION = Type.getType(NetworkDirectionPacket.class);
     private static final Type CONFIG = Type.getType(Config.class);
 
-    public static synchronized void run(ModFileScanData scanData, String modId) {
-        registry(scanData,modId);
+    public static synchronized void run(String modId, ModFileScanData scanData) {
+        registry(scanData, modId);
     }
 
     public static void registry(ModFileScanData scanData, String modId) {
