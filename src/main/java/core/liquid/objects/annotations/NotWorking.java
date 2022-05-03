@@ -7,8 +7,10 @@ import static java.lang.annotation.ElementType.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value={CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, MODULE, PARAMETER, TYPE})
 public @interface NotWorking {
-    /*
-    * This annotation working like {@code @Deprecated}, but when this class annotated,
+    /**
+    * This annotation working like {@link java.lang.Deprecated}, but when this class annotated,
     * element not considered deprecated, and just temporarily not working.
     */
+    boolean deprecated() default true;
+
 }

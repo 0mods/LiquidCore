@@ -3,18 +3,12 @@ package core.liquid.network.proxy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
-public class Direction {
-    public void init() { }
+public interface Direction {
+    void init();
 
-    public boolean clientSide() {
-        return true;
-    }
+    boolean clientSide();
 
-    public Level clientLevel() {
-        return null;
-    }
+    Level clientLevel();
 
-    public Player clientPlayer() {
-        return null;
-    }
+    Player clientPlayer();
 }

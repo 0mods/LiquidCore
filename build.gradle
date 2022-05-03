@@ -13,8 +13,10 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
 
+String mod_version_full = "${mc_ver}_${ver}"
+
 group = 'com.algorithmlx'
-version = ver
+version = "${mod_version_full}"
 
 java {
     archivesBaseName = modId
@@ -22,7 +24,7 @@ java {
 }
 
 minecraft {
-    mappings channel: 'official', version: '1.18.1'
+    mappings channel: 'official', version: "${mc_ver}"
 
     // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
