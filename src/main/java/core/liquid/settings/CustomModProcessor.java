@@ -34,6 +34,7 @@ import java.util.Locale;
 
 import static net.minecraftforge.registries.DeferredRegister.*;
 
+@SuppressWarnings("ALL")
 @NotWorking
 public class CustomModProcessor {
     private static final Type REGISTRATION = Type.getType(Register.class);

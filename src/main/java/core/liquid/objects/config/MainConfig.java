@@ -13,9 +13,7 @@ public class MainConfig {
 
         if (!config.exists()) {
             JsonSaveHelper.save(config, new JsonObject());
-        } else {
-
-        }
+        } /*else {}*/
     }
 
     public static void setInt(String target, int value) {

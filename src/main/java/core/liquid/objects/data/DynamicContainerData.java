@@ -2,12 +2,7 @@ package core.liquid.objects.data;
 
 import net.minecraft.sounds.SoundEvent;
 
-public record DynamicContainerData(String name, int rowWidth, int rowHeight, boolean fireResistant, SoundEvent soundEvent) {
-
-    public String getName() {
-        return this.name;
-    }
-
+public record DynamicContainerData(int rowWidth, int rowHeight, SoundEvent soundEvent) {
     public int getRowWidth() {
         return this.rowWidth;
     }
@@ -16,15 +11,11 @@ public record DynamicContainerData(String name, int rowWidth, int rowHeight, boo
         return this.rowHeight;
     }
 
-    public boolean getFireResistant() {
-        return this.fireResistant;
-    }
-
     public SoundEvent getSoundEvent() {
         return this.soundEvent;
     }
 
-    public static DynamicContainerData create(String name, int rowWidth, int rowHeight, boolean fireResistant, SoundEvent soundEvent) {
-        return new DynamicContainerData(name, rowWidth, rowHeight, fireResistant, soundEvent);
+    public static DynamicContainerData create(int rowWidth, int rowHeight, SoundEvent soundEvent) {
+        return new DynamicContainerData(rowWidth, rowHeight, soundEvent);
     }
 }

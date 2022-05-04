@@ -8,7 +8,7 @@ public final class VoxelShapeBuilder {
     private VoxelShape leftShape;
     private VoxelShape lastOrShape;
 
-    public static VoxelShapeBuilder fromShapes(VoxelShape... shapes) {
+    public static VoxelShapeBuilder from(VoxelShape... shapes) {
         var builder = new VoxelShapeBuilder();
 
         for (var shape : shapes) {
@@ -36,7 +36,7 @@ public final class VoxelShapeBuilder {
         return this;
     }
 
-    public VoxelShapeBuilder cuboid(double x1, double y1, double z1, double x2, double y2, double z2) {
+    public VoxelShapeBuilder cube(double x1, double y1, double z1, double x2, double y2, double z2) {
         var shape = Block.box(x1, y1, z1, x2, y2, z2);
         return this.shape(shape);
     }

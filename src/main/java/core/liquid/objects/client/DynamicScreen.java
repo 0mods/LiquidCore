@@ -34,7 +34,7 @@ public class DynamicScreen extends AbstractContainerScreen<DynamicContainer> {
         RenderSystem.clearColor(1.0F, 1.0F, 1.0F, 1.0F);
         int x = (this.width - this.imageWidth) / 2;
         int y = (this.height - this.imageHeight) / 2;
-        renderBgTexture(pPoseStack, new Rect(x, y, imageWidth, imageHeight), pPartialTick, 0xFFFFFFFF);
+        renderBgTexture(pPoseStack, new Rect(x, y, imageWidth, imageHeight), 0xFFFFFFFF);
         RenderSystem.setShaderTexture(0, new ResourceLocation("textures/gui/container/hopper.png"));
 
         for (Slot slot : getMenu().slots) {
@@ -49,7 +49,7 @@ public class DynamicScreen extends AbstractContainerScreen<DynamicContainer> {
         renderTooltip(pPoseStack, pMouseX, pMouseY);
     }
 
-    public void renderBgTexture(PoseStack poseStack, Rect bounds, float pPartialTick, int color) {
+    public void renderBgTexture(PoseStack poseStack, Rect bounds,  int color) {
         float alpha = ((color >> 24) & 0xFF) / 255f;
         float red = ((color >> 16) & 0xFF) / 255f;
         float green = ((color >> 8) & 0xFF) / 255f;
