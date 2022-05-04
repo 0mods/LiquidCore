@@ -1,4 +1,4 @@
-package example.keybind;
+package core.liquid.example.keybind;
 
 import core.liquid.LiquidCore;
 import core.liquid.keybind.KeyBindBuilder;

@@ -1,4 +1,4 @@
-package example.data;
+package core.liquid.example.data;
 
 import core.liquid.objects.data.gen.LootTableProviderBase;
 import net.minecraft.data.DataGenerator;

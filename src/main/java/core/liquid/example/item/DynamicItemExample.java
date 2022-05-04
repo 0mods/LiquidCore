@@ -1,4 +1,4 @@
-package example.item;
+package core.liquid.example.item;
 
 import core.liquid.dynamic.item.DynamicItem;
 import core.liquid.objects.data.DynamicContainerData;

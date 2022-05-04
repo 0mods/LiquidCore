@@ -1,4 +1,4 @@
-package example.data;
+package core.liquid.example.data;
 
 import core.liquid.objects.data.gen.AdvancementGenerator;
 import net.minecraft.advancements.Advancement;
@@ -27,6 +27,6 @@ class AdvancementsExample extends AdvancementGenerator {
                         FrameType.TASK, true, true, false)
                 .addCriterion("lll", InventoryChangeTrigger.TriggerInstance.hasItems(Items.ACACIA_BOAT))
                 .save(consumer, "aaaaaa/main/main");
-        advancement(main, Items.ACACIA_BOAT, "example", FrameType.TASK, true, true, false, "aaaaa");
+        advancement(main, Items.ACACIA_BOAT, "core/liquid/example", FrameType.TASK, true, true, false, "aaaaa");
     }
 }

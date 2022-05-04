@@ -1,4 +1,4 @@
-package example.proxy;
+package core.liquid.example.proxy;
 
 import core.liquid.network.proxy.Direction;
 import net.minecraft.world.entity.player.Player;

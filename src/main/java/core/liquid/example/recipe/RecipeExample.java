@@ -1,4 +1,4 @@
-package example.recipe;
+package core.liquid.example.recipe;
 
 import core.liquid.recipes.LiquidRecipeSerializers;
 import core.liquid.recipes.LiquidRecipes;
