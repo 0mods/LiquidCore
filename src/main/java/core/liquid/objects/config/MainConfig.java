@@ -10,10 +10,9 @@ public class MainConfig {
     private static final File config = LiquidDirectory.CONFIG_DIR.get().resolve("liquid.json").toFile();
 
     public static void initConfig() {
-
         if (!config.exists()) {
             JsonSaveHelper.save(config, new JsonObject());
-        } /*else {}*/
+        }
     }
 
     public static void setInt(String target, int value) {
