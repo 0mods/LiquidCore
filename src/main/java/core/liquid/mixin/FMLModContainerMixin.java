@@ -1,8 +1,8 @@
 package core.liquid.mixin;
 
+import core.liquid.objects.annotations.LiquidMod;
 import core.liquid.objects.annotations.NotWorking;
 import core.liquid.settings.CustomModProcessor;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLModContainer;
 import net.minecraftforge.forgespi.language.ModFileScanData;
 import org.spongepowered.asm.mixin.Final;
@@ -25,7 +25,7 @@ public abstract class FMLModContainerMixin {
     public void fmlModConstructingHook(CallbackInfo ci) {
         FMLModContainer modContainer = (FMLModContainer) (Object) this;
         String modId = modContainer.getModId();
-        if (modClass.isAnnotationPresent(Mod.class)) {
+        if (modClass.isAnnotationPresent(LiquidMod.class)) {
             CustomModProcessor.run(modId, scanResults);
         }
     }

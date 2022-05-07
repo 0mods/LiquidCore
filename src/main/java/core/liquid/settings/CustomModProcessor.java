@@ -1,5 +1,6 @@
 package core.liquid.settings;
 
+import core.liquid.LiquidCore;
 import core.liquid.network.messages.LiquidPacket;
 import core.liquid.objects.annotations.NetworkDirectionPacket;
 import core.liquid.objects.annotations.NotWorking;
@@ -10,12 +11,12 @@ import core.liquid.objects.client.PackResourcesAdapter;
 import core.liquid.objects.config.ConfigVariable;
 import core.liquid.objects.config.MainConfig;
 import core.liquid.network.NetworkHandler;
-import core.liquid.objects.block.LiquidBlockBase;
+//import core.liquid.objects.block.LiquidBlockBase;
 import core.liquid.objects.item.ArmorBase;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.BlockItem;
+//import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -42,10 +43,12 @@ public class CustomModProcessor {
     private static final Type CONFIG = Type.getType(Config.class);
 
     public static synchronized void run(String modId, ModFileScanData scanData) {
+        LiquidCore.log.info("start CMP");
         registry(scanData, modId);
     }
 
     public static void registry(ModFileScanData scanData, String modId) {
+        LiquidCore.log.info("using CMP's Registers");
         DeferredRegister<Block> BLOCKS = create(ForgeRegistries.BLOCKS, modId);
         DeferredRegister<Item> ITEMS = create(ForgeRegistries.ITEMS, modId);
         DeferredRegister<BlockEntityType<?>> TILES = create(ForgeRegistries.BLOCK_ENTITIES, modId);
@@ -78,10 +81,10 @@ public class CustomModProcessor {
                                     try {
                                         Object someObject = field.get(null);
 
-                                        if (someObject instanceof LiquidBlockBase block) {
+                                        /*if (someObject instanceof LiquidBlockBase block) {
                                             BLOCKS.register(regName, () -> block);
                                             ITEMS.register(regName, () -> new BlockItem(block, block.itemProperties()));
-                                        } else if (someObject instanceof Item item) {
+                                        } else */if (someObject instanceof Item item) {
                                             ITEMS.register(regName, () -> item);
                                             if (hasAutoModel) {
                                                 AutoModel.genModels.add(new ResourceLocation(modId, regName));

@@ -2,9 +2,8 @@ package core.liquid.dynamic.container;
 
 import core.liquid.LiquidCore;
 import core.liquid.objects.container.BasedContainer;
-import core.liquid.objects.data.DynamicContainerData;
-import core.liquid.objects.data.another.Dim;
-import core.liquid.objects.data.another.Point;
+import core.liquid.objects.data.container.DynamicContainerData;
+import core.liquid.objects.data.scale.ScaleArray.*;
 import core.liquid.objects.data.tag.ContainerTag;
 import core.liquid.dynamic.item.DynamicItem;
 import net.minecraft.nbt.ListTag;
@@ -18,10 +17,8 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class DynamicContainer extends BasedContainer {
-    public static final int BACKPACK_INVENTORY = 1;
     private final Player player;
     private final InteractionHand hand;
-    private ItemStack itemStack;
     int padding = 8;
     int titleSpace = 10;
 
@@ -37,7 +34,7 @@ public class DynamicContainer extends BasedContainer {
     }
 
     private void loadContainer(Inventory inventory, ItemStack itemStack) {
-        Dim dimension = this.getDimension();
+        Size dimension = this.getDimension();
         DynamicContainerData type = this.getDynamicItem().getType();
         int rowWidth = type.getRowWidth();
         int rows = type.getRowHeight();
@@ -77,17 +74,17 @@ public class DynamicContainer extends BasedContainer {
         return (DynamicItem) player.getItemInHand(hand).getItem();
     }
 
-    public Dim getDimension() {
+    public Size getDimension() {
         DynamicContainerData type = getDynamicItem().getType();
-        return new Dim(padding * 2 + Math.max(type.getRowWidth(), 9) * 18, padding * 2 + titleSpace * 2 + 8 + (type.getRowHeight() + 4) * 18);
+        return new Size(padding * 2 + Math.max(type.getRowWidth(), 9) * 18, padding * 2 + titleSpace * 2 + 8 + (type.getRowHeight() + 4) * 18);
     }
 
-    public Point getBackpackSlotPosition(Dim dimension, int x, int y) {
+    public Point getBackpackSlotPosition(Size dimension, int x, int y) {
         DynamicContainerData type = getDynamicItem().getType();
         return new Point(dimension.width / 2 - type.getRowWidth() * 9 + x * 18, padding + titleSpace + y * 18);
     }
 
-    public Point getPlayerInvSlotPosition(Dim dimension, int x, int y) {
+    public Point getPlayerInvSlotPosition(Size dimension, int x, int y) {
         return new Point(dimension.width / 2 - 9 * 9 + x * 18, dimension.height - padding - 4 * 18 - 3 + y * 18 + (y == 3 ? 4 : 0));
     }
 
@@ -101,7 +98,7 @@ public class DynamicContainer extends BasedContainer {
     public @NotNull ItemStack quickMoveStack(Player player, int index) {
         ItemStack itemStack = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
-        if (slot != null && slot.hasItem()) {
+        if (slot.hasItem()) {
             ItemStack toInsert = slot.getItem();
             itemStack = toInsert.copy();
             DynamicContainerData type = getDynamicItem().getType();

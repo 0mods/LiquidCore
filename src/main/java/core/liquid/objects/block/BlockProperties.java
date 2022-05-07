@@ -2,6 +2,6 @@ package core.liquid.objects.block;
 
 import net.minecraft.world.item.Item;
 
-public interface BlockProperties {
+interface BlockProperties {
     Item.Properties itemProperties();
 }

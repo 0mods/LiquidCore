@@ -1,8 +1,7 @@
 package core.liquid.objects.client;
 
 import core.liquid.LiquidCore;
-import core.liquid.objects.data.another.Dim;
-import core.liquid.objects.data.another.Rect;
+import core.liquid.objects.data.scale.ScaleArray.*;
 import core.liquid.dynamic.container.DynamicContainer;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
@@ -20,7 +19,7 @@ public class DynamicScreen extends AbstractContainerScreen<DynamicContainer> {
 
     public DynamicScreen(DynamicContainer pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
-        Dim dimension = pMenu.getDimension();
+        Size dimension = pMenu.getDimension();
         this.imageWidth = dimension.width;
         this.imageHeight = dimension.height;
         this.titleLabelY = 7;
@@ -34,7 +33,7 @@ public class DynamicScreen extends AbstractContainerScreen<DynamicContainer> {
         RenderSystem.clearColor(1.0F, 1.0F, 1.0F, 1.0F);
         int x = (this.width - this.imageWidth) / 2;
         int y = (this.height - this.imageHeight) / 2;
-        renderBgTexture(pPoseStack, new Rect(x, y, imageWidth, imageHeight), 0xFFFFFFFF);
+        renderBgTexture(pPoseStack, new Rectangle(x, y, imageWidth, imageHeight), 0xFFFFFFFF);
         RenderSystem.setShaderTexture(0, new ResourceLocation("textures/gui/container/hopper.png"));
 
         for (Slot slot : getMenu().slots) {
@@ -49,7 +48,7 @@ public class DynamicScreen extends AbstractContainerScreen<DynamicContainer> {
         renderTooltip(pPoseStack, pMouseX, pMouseY);
     }
 
-    public void renderBgTexture(PoseStack poseStack, Rect bounds,  int color) {
+    public void renderBgTexture(PoseStack poseStack, Rectangle bounds, int color) {
         float alpha = ((color >> 24) & 0xFF) / 255f;
         float red = ((color >> 16) & 0xFF) / 255f;
         float green = ((color >> 8) & 0xFF) / 255f;

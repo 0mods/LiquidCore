@@ -1,4 +1,4 @@
-package core.liquid.objects.data;
+package core.liquid.objects.data.container;
 
 import net.minecraft.sounds.SoundEvent;
 

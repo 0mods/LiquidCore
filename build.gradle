@@ -14,6 +14,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
 
 String mod_version_full = "${mc_ver}_${ver}"
+String ForgeVersion = "${mc_ver}-${forge_ver}"
 
 group = 'com.algorithmlx'
 version = "${mod_version_full}"
@@ -93,7 +94,7 @@ repositories {
 dependencies {
     annotationProcessor 'org.spongepowered:mixin:0.8:processor'
 
-    minecraft 'net.minecraftforge:forge:1.18.1-39.1.2'
+    minecraft "net.minecraftforge:forge:${ForgeVersion}"
 }
 
 jar {

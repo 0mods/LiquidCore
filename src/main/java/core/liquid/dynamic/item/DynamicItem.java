@@ -1,6 +1,6 @@
 package core.liquid.dynamic.item;
 
-import core.liquid.objects.data.DynamicContainerData;
+import core.liquid.objects.data.container.DynamicContainerData;
 import core.liquid.dynamic.container.DynamicContainer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
