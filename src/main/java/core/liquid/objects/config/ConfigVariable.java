@@ -1,5 +1,8 @@
 package core.liquid.objects.config;
 
+import core.liquid.objects.annotations.NotWorking;
+
+@Deprecated(forRemoval = true)
 public class ConfigVariable<T> {
     private T value;
     private final String name;

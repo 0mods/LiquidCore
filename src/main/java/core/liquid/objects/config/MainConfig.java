@@ -1,11 +1,13 @@
 package core.liquid.objects.config;
 
 import com.google.gson.JsonObject;
+import core.liquid.objects.annotations.NotWorking;
 import core.liquid.objects.enums.LiquidDirectory;
 import core.liquid.helper.JsonSaveHelper;
 
 import java.io.File;
 
+@Deprecated(forRemoval = true)
 public class MainConfig {
     private static final File config = LiquidDirectory.CONFIG_DIR.get().resolve("liquid.json").toFile();
 

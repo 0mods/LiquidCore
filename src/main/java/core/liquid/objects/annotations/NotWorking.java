@@ -11,6 +11,9 @@ public @interface NotWorking {
     * This annotation working like {@link java.lang.Deprecated}, but when this class annotated,
     * element not considered deprecated, and just temporarily not working.
     */
-    boolean deprecated() default true;
+    boolean deprecated() default false;
 
+    Deprecated deprecation() default @Deprecated;
+
+    boolean toFix() default false;
 }

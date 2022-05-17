@@ -2,6 +2,7 @@ package core.liquid.objects.client;
 
 import com.google.gson.JsonObject;
 import core.liquid.LiquidCore;
+import core.liquid.objects.annotations.NotWorking;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
@@ -12,6 +13,7 @@ import java.util.*;
 import java.util.function.BooleanSupplier;
 import java.util.function.Predicate;
 
+@NotWorking(deprecated = true, deprecation = @Deprecated)
 public class AutoModel implements PackResources {
     public static List<ResourceLocation> genModels = new ArrayList<>();
     static AutoModel packInstance;

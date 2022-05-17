@@ -100,7 +100,7 @@ dependencies {
 jar {
     manifest {
         attributes([
-                "Specification-Title"     : "liquid",
+                "Specification-Title"     : archivesBaseName,
                 "Specification-Vendor"    : "AlgorithmLX",
                 "Specification-Version"   : "1",
                 "Implementation-Title"    : project.name,

@@ -36,7 +36,8 @@ import java.util.Locale;
 import static net.minecraftforge.registries.DeferredRegister.*;
 
 @SuppressWarnings("ALL")
-@NotWorking
+@NotWorking(deprecated = true)
+@Deprecated(forRemoval = true) //See {@core.liquid.load.ModInit}
 public class CustomModProcessor {
     private static final Type REGISTRATION = Type.getType(Register.class);
     private static final Type NETWORK_DIRECTION = Type.getType(NetworkDirectionPacket.class);
