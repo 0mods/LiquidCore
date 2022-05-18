@@ -16,6 +16,6 @@ public class LiquidCore {
 
     public LiquidCore() {
         log.info("LIQUID CORE SUCCESSFULLY STARTED");
-        LiquidLoading.start(this);
+        LiquidLoading.start();
     }
 }

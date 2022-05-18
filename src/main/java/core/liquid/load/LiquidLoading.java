@@ -7,7 +7,7 @@ import net.minecraftforge.forgespi.language.IModInfo;
 import net.minecraftforge.forgespi.language.ModFileScanData;
 
 public class LiquidLoading {
-    public static void start(Object modInstance) {
+    public static void start() {
         ModLoadingContext context = ModLoadingContext.get();
         ModContainer container = context.getActiveContainer();
 
@@ -17,6 +17,6 @@ public class LiquidLoading {
 
         IModInfo modInfo = container.getModInfo();
         ModFileScanData scanResult = modInfo.getOwningFile().getFile().getScanResult();
-        ModInit.run(container, scanResult, modInstance);
+        ModInit.run(container.getModId(), scanResult);
     }
 }

@@ -16,7 +16,7 @@ public class SubscribeRegistry {
         for (LiquidRegistry register : registers) {
             int depCount = 0;
 
-            if (register instanceof RegistryOrder ) {
+            if (register instanceof RegistryOrder) {
                 for (Class<?> dependency : ((RegistryOrder) register).getDeps()) {
                     for (LiquidRegistry possibleParent : registers) {
                         if (dependency.isAssignableFrom(possibleParent.getClass())) {
