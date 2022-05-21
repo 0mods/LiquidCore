@@ -7,12 +7,12 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
-public abstract class BasedContainer extends AbstractContainerMenu {
+public abstract class AdvancedContainerMenu extends AbstractContainerMenu {
     private final IItemHandler playerInventory;
 
-    public BasedContainer(MenuType<?> container, int windowId, Inventory playerInventory) {
+    public AdvancedContainerMenu(MenuType<?> container, int windowId, Inventory inv) {
         super(container, windowId);
-        this.playerInventory = new InvWrapper(playerInventory);
+        this.playerInventory = new InvWrapper(inv);
     }
 
     public int addSlotRange(IItemHandler handler, int index, int x, int y, int amount, int dx) {

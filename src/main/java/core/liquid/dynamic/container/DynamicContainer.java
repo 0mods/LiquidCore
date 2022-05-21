@@ -1,7 +1,7 @@
 package core.liquid.dynamic.container;
 
 import core.liquid.LiquidCore;
-import core.liquid.objects.container.BasedContainer;
+import core.liquid.objects.container.AdvancedContainerMenu;
 import core.liquid.objects.data.container.DynamicContainerData;
 import core.liquid.objects.data.scale.ScaleArray.*;
 import core.liquid.objects.data.tag.ContainerTag;
@@ -16,7 +16,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class DynamicContainer extends BasedContainer {
+public class DynamicContainer extends AdvancedContainerMenu {
     private final Player player;
     private final InteractionHand hand;
     int padding = 8;
