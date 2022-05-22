@@ -1,7 +1,6 @@
 package core.liquid;
 
 import core.liquid.dynamic.container.DynamicContainer;
-import core.liquid.load.LiquidLoading;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.fml.common.Mod;
 import org.apache.logging.log4j.LogManager;
@@ -16,6 +15,5 @@ public class LiquidCore {
 
     public LiquidCore() {
         log.info("LIQUID CORE SUCCESSFULLY STARTED");
-        LiquidLoading.start();
     }
 }
