@@ -19,7 +19,7 @@ public class KeyBindings {
     public static final int PG_DN = 34;
     public static final int END = 35;
     public static final int HOME = 36;
-    public static final int PRT_SC = 44;
+    public static final int PRT_SCR = 44;
     public static final int INSERT = 45;
     public static final int DELETE = 46;
     public static final int ZERO = 48;

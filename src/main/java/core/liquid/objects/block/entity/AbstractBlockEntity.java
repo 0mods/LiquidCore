@@ -4,17 +4,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public abstract class AbstractBlockEntity extends BlockEntity {
+public abstract class AbstractBlockEntity extends BaseContainerBlockEntity {
     public AbstractBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);
     }
-
-    public abstract void readTag(CompoundTag compoundTag, boolean descPacket);
-    public abstract void saveTag(CompoundTag compoundTag, boolean descPacket);
 
     @Override
     public void load(CompoundTag pTag) {
@@ -22,16 +19,20 @@ public abstract class AbstractBlockEntity extends BlockEntity {
         this.readTag(pTag, false);
     }
 
+    public abstract void readTag(CompoundTag compoundTag, boolean packet);
+
     @Override
     protected void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
         this.saveTag(pTag, false);
     }
 
+    public abstract void saveTag(CompoundTag compoundTag, boolean packet);
+
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this, blockEntity -> {
-            CompoundTag tag = new CompoundTag();
+            CompoundTag tag  = new CompoundTag();
             this.saveTag(tag, true);
             return tag;
         });
@@ -54,4 +55,27 @@ public abstract class AbstractBlockEntity extends BlockEntity {
         saveTag(tag, true);
         return tag;
     }
+
+    private boolean isUnloaded = false;
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        isUnloaded = false;
+    }
+
+    @Override
+    public void onChunkUnloaded() {
+        super.onChunkUnloaded();
+        isUnloaded = true;
+    }
+
+    @Override
+    public void setRemoved() {
+        if (!isUnloaded)
+            onRemoved();
+        super.setRemoved();
+    }
+
+    public void onRemoved() {}
 }
