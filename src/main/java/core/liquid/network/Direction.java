@@ -1,4 +1,4 @@
-package core.liquid.network.proxy;
+package core.liquid.network;
 
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
