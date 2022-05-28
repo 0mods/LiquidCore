@@ -17,7 +17,7 @@ apply plugin: 'maven-publish'
 String mod_version_full = "${mc_ver}_${ver}"
 String ForgeVersion = "${mc_ver}-${forge_ver}"
 
-group = 'core'
+group = 'com.algorithmlx'
 version = "${mod_version_full}"
 
 java {
