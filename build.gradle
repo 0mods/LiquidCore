@@ -10,12 +10,18 @@ buildscript {
     }
 }
 
+plugins {
+    id "com.modrinth.minotaur" version "2.+"
+    id 'com.matthewprenger.cursegradle' version "1.4.0"
+}
+
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'maven-publish'
 
 String mod_version_full = "${mc_ver}_${ver}"
 String ForgeVersion = "${mc_ver}-${forge_ver}"
+String ReleaseType = "$rtype"
 
 group = 'com.algorithmlx'
 version = "${mod_version_full}"
@@ -122,8 +128,10 @@ tasks.withType(JavaCompile) {
 
 publishing {
     publications {
-        maven(MavenPublication) {
-            from components.java
+        mavenJava(MavenPublication) {
+            artifactId project.archivesBaseName
+
+            artifact jar
         }
     }
 
@@ -136,4 +144,19 @@ publishing {
             }
         }
     }
+}
+
+modrinth {
+    token = modrinthToken
+    projectId = modtinthLiquidId
+    versionNumber = "$ver"
+    versionType = ReleaseType
+    uploadFile = jar
+    gameVersions = [
+            "$mc_ver"
+    ]
+    loaders = [
+            "forge"
+    ]
+    dependencies {}
 }
