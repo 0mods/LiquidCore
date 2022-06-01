@@ -1,81 +1,57 @@
 package core.liquid.objects.block.entity;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
+import org.jetbrains.annotations.NotNull;
 
-public abstract class AbstractBlockEntity extends BaseContainerBlockEntity {
+public abstract class AbstractBlockEntity extends BlockEntity {
+    private final LazyOptional<IItemHandler> stackHandlerCap = LazyOptional.of(this::getStackHandler);
+
     public AbstractBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);
     }
 
-    @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
-        this.readTag(pTag, false);
-    }
-
-    public abstract void readTag(CompoundTag compoundTag, boolean packet);
-
-    @Override
-    protected void saveAdditional(CompoundTag pTag) {
-        super.saveAdditional(pTag);
-        this.saveTag(pTag, false);
-    }
-
-    public abstract void saveTag(CompoundTag compoundTag, boolean packet);
+    public abstract @NotNull ItemStackHandler getStackHandler();
 
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this, blockEntity -> {
-            CompoundTag tag  = new CompoundTag();
-            this.saveTag(tag, true);
-            return tag;
-        });
+        return ClientboundBlockEntityDataPacket.create(this, BlockEntity::saveWithFullMetadata);
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        CompoundTag tag = pkt.getTag() != null ? pkt.getTag() : new CompoundTag();
-        this.readTag(tag, true);
-    }
-
-    @Override
-    public void handleUpdateTag(CompoundTag tag) {
-        this.readTag(tag, true);
-    }
-
-    @Override
+    @NotNull
     public CompoundTag getUpdateTag() {
-        CompoundTag tag = super.getUpdateTag();
-        saveTag(tag, true);
-        return tag;
-    }
-
-    private boolean isUnloaded = false;
-
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        isUnloaded = false;
+        return this.saveWithFullMetadata();
     }
 
     @Override
-    public void onChunkUnloaded() {
-        super.onChunkUnloaded();
-        isUnloaded = true;
+    public void load(@NotNull CompoundTag p_155245_) {
+        super.load(p_155245_);
+        this.getStackHandler().deserializeNBT(p_155245_);
     }
 
     @Override
-    public void setRemoved() {
-        if (!isUnloaded)
-            onRemoved();
-        super.setRemoved();
+    protected void saveAdditional(CompoundTag p_187471_) {
+        p_187471_.merge(this.getStackHandler().serializeNBT());
     }
 
-    public void onRemoved() {}
+    @NotNull
+    @Override
+    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
+        if (!this.isRemoved() && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(cap, this.stackHandlerCap);
+        }
+
+        return super.getCapability(cap, side);
+    }
 }

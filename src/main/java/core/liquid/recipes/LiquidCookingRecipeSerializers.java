@@ -1,24 +1,23 @@
 package core.liquid.recipes;
 
-import core.liquid.helper.IngredientHelper;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import core.liquid.helper.IngredientHelper;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.jetbrains.annotations.Nullable;
 
-public class LiquidRecipeSerializers<T extends LiquidRecipes> extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<T> {
+public class LiquidCookingRecipeSerializers<T extends LiquidRecipes> extends LiquidRecipeSerializers<T> {
     public final SerializerFactory<T> serializerFactory;
 
-    public LiquidRecipeSerializers(SerializerFactory<T> serializerFactory) {
+    public LiquidCookingRecipeSerializers(SerializerFactory<T> serializerFactory) {
+        super(serializerFactory);
         this.serializerFactory = serializerFactory;
     }
 
@@ -29,7 +28,7 @@ public class LiquidRecipeSerializers<T extends LiquidRecipes> extends ForgeRegis
         ItemStack itemStack;
 
         if (!jsonObject.has("result"))
-            throw new JsonSyntaxException("com.google.gson.JsonSyntaxException; core.liquid.recipes.LiquidRecipeSerializers; - have a message: \"RECIPE CANT BEEN CREATED! MISSING THIS ARGUMENT: 'result'\"");
+            throw new JsonSyntaxException("com.google.gson.JsonSyntaxException; com.algorithmlx.liquid.recipes.LiquidRecipeSerializers; - have a message: \"RECIPE CANT BEEN CREATED! MISSING THIS ARGUMENT: 'result'\"");
 
         if (jsonObject.get("result").isJsonObject())
             itemStack = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(jsonObject, "result"));
@@ -39,7 +38,10 @@ public class LiquidRecipeSerializers<T extends LiquidRecipes> extends ForgeRegis
             itemStack = new ItemStack(ForgeRegistries.ITEMS.getValue(location));
         }
 
-        return this.getSerializerFactory().create(pRecipeId, ingredient, itemStack);
+        float xp = GsonHelper.getAsFloat(jsonObject, "exp", 0.0F);
+        int time = GsonHelper.getAsInt(jsonObject, "cooktime", 0);
+
+        return this.getSerializerFactory().create(pRecipeId, ingredient, itemStack, xp, time);
     }
 
     @Nullable
@@ -47,7 +49,9 @@ public class LiquidRecipeSerializers<T extends LiquidRecipes> extends ForgeRegis
     public T fromNetwork(ResourceLocation pRecipeId, FriendlyByteBuf pBuffer) {
         Ingredient ingredient = Ingredient.fromNetwork(pBuffer);
         ItemStack itemStack = pBuffer.readItem();
-        return this.getSerializerFactory().create(pRecipeId, ingredient, itemStack);
+        float xp = pBuffer.readFloat();
+        int time = pBuffer.readInt();
+        return this.getSerializerFactory().create(pRecipeId, ingredient, itemStack, xp, time);
     }
 
     @Override
@@ -58,11 +62,12 @@ public class LiquidRecipeSerializers<T extends LiquidRecipes> extends ForgeRegis
         pBuffer.writeVarInt(pRecipe.time);
     }
 
+    @Override
     public SerializerFactory<T> getSerializerFactory() {
         return this.serializerFactory;
     }
 
-    public interface SerializerFactory<T extends LiquidRecipes> {
-        T create(ResourceLocation id, Ingredient ingredient, ItemStack result);
+    public interface SerializerFactory<T extends LiquidRecipes> extends LiquidRecipeSerializers.SerializerFactory<T> {
+        T create(ResourceLocation id, Ingredient ingredient, ItemStack result, float xp, int time);
     }
 }
