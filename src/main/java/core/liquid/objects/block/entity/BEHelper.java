@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
@@ -20,7 +21,7 @@ final class BEHelper {
         var players = level.players();
         BlockPos pos = blockEntity.getBlockPos();
 
-        for (var player : players) {
+        for (Player player : players) {
             if (player instanceof ServerPlayer serverPlayer) {
                 if (getPlayerMath(serverPlayer.getX(), serverPlayer.getZ(), pos.getX() + 0.5, pos.getZ() + 0.5)) {
                     serverPlayer.connection.send(packet);
