@@ -29,13 +29,6 @@ final class BEHelper {
         }
     }
 
-    public static void playerDispatch(Level level, int x, int y, int z) {
-        BlockEntity blockEntity = level.getBlockEntity(new BlockPos(x, y, z));
-        if (blockEntity != null) {
-            playerDispatch(blockEntity);
-        }
-    }
-
     private static boolean getPlayerMath(double x1, double z1, double x2, double z2) {
         return Math.hypot(x1 - x2, z1 - z2) < 64;
     }
