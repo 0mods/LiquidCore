@@ -1,7 +1,7 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "core.liquid.mixin",
+  "package": "liquid.mixin",
   "compatibilityLevel": "JAVA_8",
   "refmap": "liquid.refmap.json",
   "mixins": [

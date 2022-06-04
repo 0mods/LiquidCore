@@ -1,3 +1,3 @@
 # LiquidCore
-Dedendency for my mods
+Dependency for my mods
 

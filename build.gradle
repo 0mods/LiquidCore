@@ -158,5 +158,6 @@ modrinth {
     loaders = [
             "forge"
     ]
-    dependencies {}
+    changelog = file("changelog.md").toString()
+
 }
