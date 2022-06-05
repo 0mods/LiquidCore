@@ -85,6 +85,7 @@ public abstract class LiquidRecipes implements Recipe<Container> {
     public NonNullList<Ingredient> getIngredients() {
         NonNullList<Ingredient> nonNull = NonNullList.create();
         nonNull.add(this.ingredient);
+        nonNull.add(this.catalyst);
         return nonNull;
     }
 

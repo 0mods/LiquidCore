@@ -1,3 +1,10 @@
+# LiquidCore Version 1.12
+
+### Changes:
+    1. Fix bug with recipe serializer using
+    2. Improved Config creation
+    3. Deleted Deprecated classes
+
 # LiquidCore Version 1.11
 
 ### Changes:

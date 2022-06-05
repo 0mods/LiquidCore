@@ -1,13 +1,14 @@
 package liquid.config;
 
-import net.minecraft.CrashReport;
-import net.minecraft.client.Minecraft;
+import liquid.LiquidCore;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.forgespi.language.IModInfo;
+import net.minecraftforge.forgespi.language.ModFileScanData;
 
 import java.util.function.Consumer;
 
@@ -26,16 +27,18 @@ public abstract class ExtendableConfig {
         return configSpec;
     }
 
-    public static <T extends ExtendableConfig> T of(ModConfig.Type type, Class<T> config, String modId) {
-        return buildingConfig(type, config, modId, false);
+    public static <T extends ExtendableConfig> T of(ModConfig.Type type, Class<T> config) {
+        return buildingConfig(type, config, false);
     }
 
-    public static <T extends ExtendableConfig> T ofReload(ModConfig.Type type, Class<T> config, String modId) {
-        return buildingConfig(type, config, modId, true);
+    public static <T extends ExtendableConfig> T ofReload(ModConfig.Type type, Class<T> config) {
+        return buildingConfig(type, config, true);
     }
 
-    private static <T extends ExtendableConfig> T buildingConfig(ModConfig.Type type, Class<T> tClass, String modId, Boolean reloadable) {
+    private static <T extends ExtendableConfig> T buildingConfig(ModConfig.Type type, Class<T> tClass, Boolean reloadable) {
+        ModContainer modContainer = ModLoadingContext.get().getActiveContainer();
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
+
         T compile;
 
         try {
@@ -44,20 +47,20 @@ public abstract class ExtendableConfig {
             throw new IllegalStateException(throwable);
         }
 
+        String modId = modContainer.getModId();
+
         ForgeConfigSpec spec = builder.build();
-        ModLoadingContext.get().registerConfig(type, spec, "liquid/" + modId + "/" + type.extension() + ".toml");
-
-        ModContainer modContainer = ModLoadingContext.get().getActiveContainer();
-
-        if (!modId.equals(modContainer.getModId())) {
-            Minecraft.crash(
-                    new CrashReport(
-                            "FATAL. CONFIG MODID: \"" + modId + "\" DOESN'T MATH THE CONTAINER MODID: \"" + modContainer.getModId() + "\"",
-                            new RuntimeException("ModId: \"" + modId + "\" is not a ModId: \"" + modContainer.getModId() + "\"!")
-                    )
+        if (modId != null) {
+            LiquidCore.log.debug(
+                    """
+                            Generating config for ModId: {}.\s
+                            Config type: {}.\s
+                            Config class: {}.\s
+                            Config directory: config/liquid/{}/{}.toml
+                            """, modId, type, tClass, modId, type.extension()
             );
+            ModLoadingContext.get().registerConfig(type, spec, "liquid/" + modId + "/" + type.extension() + ".toml");
         }
-
         if (reloadable.equals(true)) {
             Consumer<ModConfigEvent> configEventConsumer = event -> {
                 if (event.getConfig().getType() == type) {

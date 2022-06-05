@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 
 @Mod(LiquidCore.ModId)
 public class LiquidCore {
-    public static final Logger log = LogManager.getLogger(LiquidCore.class);
+    public static final Logger log = LogManager.getLogger("LiquidCore Logger");
     public static final String ModId = "liquid";
 
     public static MenuType<DynamicContainer> CONTAINER_TYPE;
@@ -19,7 +19,8 @@ public class LiquidCore {
     public static LiquidConfig COMMON;
 
     public LiquidCore() {
-        COMMON = ExtendableConfig.of(ModConfig.Type.COMMON, LiquidConfig.class, ModId);
+
+        COMMON = ExtendableConfig.of(ModConfig.Type.COMMON, LiquidConfig.class);
         log.info("LIQUID CORE SUCCESSFULLY STARTED");
     }
 }

@@ -15,8 +15,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.jetbrains.annotations.Nullable;
 
-@SuppressWarnings("ConstantConditions")
-public abstract class LiquidRecipeSerializers<T extends LiquidRecipes> extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<T> {
+public class LiquidRecipeSerializers<T extends LiquidRecipes> extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<T> {
     protected final SerializerFactory<T> serializerFactory;
 
     public LiquidRecipeSerializers(SerializerFactory<T> serializerFactory) {
@@ -26,15 +25,11 @@ public abstract class LiquidRecipeSerializers<T extends LiquidRecipes> extends F
     @Override
     public T fromJson(ResourceLocation pRecipeId, JsonObject jsonObject) {
         JsonElement jsonIngredient = GsonHelper.getAsJsonArray(jsonObject, "ingredient");
-        JsonElement jsonCatalyst = GsonHelper.getAsJsonArray(jsonObject, "catalyst");
-
         Ingredient ingredient = IngredientHelper.fromJson(jsonIngredient);
-        Ingredient catalyst = IngredientHelper.fromJson(jsonCatalyst);
-
         ItemStack itemStack;
 
         if (!jsonObject.has("result"))
-            throw new JsonSyntaxException("com.google.gson.JsonSyntaxException; core.liquid.recipes.LiquidRecipeSerializers; - have a message: \"RECIPE CANT BEEN CREATED! MISSING THIS ARGUMENT: 'result'\"");
+            throw new JsonSyntaxException("com.google.gson.JsonSyntaxException; " + LiquidRecipeSerializers.class +"; - have a message: \"RECIPE CANT BEEN CREATED! MISSING THIS ARGUMENT: 'result'\"");
 
         if (jsonObject.get("result").isJsonObject())
             itemStack = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(jsonObject, "result"));
@@ -44,18 +39,7 @@ public abstract class LiquidRecipeSerializers<T extends LiquidRecipes> extends F
             itemStack = new ItemStack(ForgeRegistries.ITEMS.getValue(location));
         }
 
-        int time = GsonHelper.getAsInt(jsonObject, "time", 0);
-        float xp = GsonHelper.getAsFloat(jsonObject, "xp", 0.0F);
-
-        T typeClassic = this.getSerializerFactory().create(pRecipeId, ingredient, itemStack);
-        T typeDoubleIngredient = this.getSerializerFactory().create(pRecipeId, ingredient, catalyst, itemStack);
-        T typeCooking = this.getSerializerFactory().create(pRecipeId, ingredient, itemStack, time, xp);
-        T typeCookingWithCatalyst = this.getSerializerFactory().create(pRecipeId, ingredient, catalyst, itemStack, time, xp);
-
-        if (time != 0 && xp != 0) return typeCooking;
-        if (catalyst != null) return typeDoubleIngredient;
-        if ((time != 0 && xp != 0) && (catalyst != null)) return typeCookingWithCatalyst;
-        return typeClassic;
+        return this.getSerializerFactory().create(pRecipeId, ingredient, itemStack);
     }
 
     @Nullable
@@ -69,17 +53,13 @@ public abstract class LiquidRecipeSerializers<T extends LiquidRecipes> extends F
     @Override
     public void toNetwork(FriendlyByteBuf pBuffer, T pRecipe) {
         pRecipe.ingredient.toNetwork(pBuffer);
-        pBuffer.writeItem(pRecipe.result);
-        pBuffer.writeFloat(pRecipe.experience);
-        pBuffer.writeVarInt(pRecipe.time);
     }
 
-    public abstract SerializerFactory<T> getSerializerFactory();
+    public SerializerFactory<T> getSerializerFactory() {
+        return this.serializerFactory;
+    };
 
     public interface SerializerFactory<T extends LiquidRecipes> {
         T create(ResourceLocation id, Ingredient ingredient, ItemStack result);
-        T create(ResourceLocation id, Ingredient ingredient, Ingredient catalyst, ItemStack result);
-        T create(ResourceLocation id, Ingredient ingredient, ItemStack result, int cookingTime, float xp);
-        T create(ResourceLocation id, Ingredient ingredient, Ingredient catalyst, ItemStack result, int cookingTime, float xp);
     }
 }
