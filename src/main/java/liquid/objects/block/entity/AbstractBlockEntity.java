@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class AbstractBlockEntity extends BlockEntity {
     private final LazyOptional<IItemHandler> stackHandlerCap = LazyOptional.of(this::getStackHandler);
-    private final StackHelper handler;
+    public final StackHelper handler;
 
     public AbstractBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);
