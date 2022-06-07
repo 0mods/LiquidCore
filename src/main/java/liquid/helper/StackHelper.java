@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
-public class StackHandler extends ItemStackHandler {
+public class StackHelper extends ItemStackHandler {
     private final Runnable runContext;
     private final Map<Integer, Integer> integerMap;
     private BiFunction<Integer, ItemStack, Boolean> isValid = null;
@@ -21,11 +21,11 @@ public class StackHandler extends ItemStackHandler {
     private int[] slotContext = null;
 
 
-    public StackHandler(int size) {
+    public StackHelper(int size) {
         this(size, null);
     }
 
-    public StackHandler(int size, Runnable runnable) {
+    public StackHelper(int size, Runnable runnable) {
         super(size);
 
         this.runContext = runnable;
@@ -106,8 +106,8 @@ public class StackHandler extends ItemStackHandler {
     }
 
 
-    public StackHandler copy() {
-        StackHandler stackHandler = new StackHandler(this.getSlots(), this.runContext);
+    public StackHelper copy() {
+        StackHelper stackHandler = new StackHelper(this.getSlots(), this.runContext);
 
         stackHandler.setDefault(this.dynamicStackable);
         stackHandler.setValid(this.isValid);
@@ -124,16 +124,16 @@ public class StackHandler extends ItemStackHandler {
         return stackHandler;
     }
 
-    public static StackHandler of(int size) {
+    public static StackHelper of(int size) {
         return of(size, b -> {});
     }
 
-    public static StackHandler of(int size, Consumer<StackHandler> c) {
+    public static StackHelper of(int size, Consumer<StackHelper> c) {
         return of(size, null, c);
     }
 
-    public static StackHandler of(int size, Runnable runnable, Consumer<StackHandler> c) {
-        StackHandler h = new StackHandler(size, runnable);
+    public static StackHelper of(int size, Runnable runnable, Consumer<StackHelper> c) {
+        StackHelper h = new StackHelper(size, runnable);
         c.accept(h);
 
         return h;

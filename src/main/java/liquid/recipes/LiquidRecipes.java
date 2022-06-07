@@ -14,7 +14,6 @@ public abstract class LiquidRecipes implements Recipe<Container> {
     protected final RecipeType<?> type;
     protected final ResourceLocation id;
     protected final Ingredient ingredient;
-    protected final Ingredient catalyst;
     protected final ItemStack result;
     protected final float experience;
     protected final int time;
@@ -25,40 +24,7 @@ public abstract class LiquidRecipes implements Recipe<Container> {
         this.id = idIn;
         this.ingredient = ingredientIn;
         this.result = resultIn;
-        this.catalyst = null;
         this.experience = experienceIn;
-        this.time = time;
-    }
-
-    public LiquidRecipes(RecipeType<?> typeIn, ResourceLocation idIn, Ingredient ingredientIn, ItemStack resultIn) {
-        this.type = typeIn;
-        this.id = idIn;
-        this.ingredient = ingredientIn;
-        this.result = resultIn;
-        this.catalyst = null;
-        this.experience = 0;
-        this.time = 0;
-    }
-
-    public LiquidRecipes(RecipeType<?> typeIn, ResourceLocation idIn, Ingredient ingredientIn,
-                         Ingredient catalyst, ItemStack resultIn) {
-        this.type = typeIn;
-        this.id = idIn;
-        this.ingredient = ingredientIn;
-        this.result = resultIn;
-        this.catalyst = catalyst;
-        this.experience = 0;
-        this.time = 0;
-    }
-
-    public LiquidRecipes(RecipeType<?> typeIn, ResourceLocation idIn, Ingredient ingredientIn, Ingredient catalyst,
-                         ItemStack resultIn, float xp, int time) {
-        this.type = typeIn;
-        this.id = idIn;
-        this.ingredient = ingredientIn;
-        this.result = resultIn;
-        this.catalyst = catalyst;
-        this.experience = xp;
         this.time = time;
     }
 
@@ -85,7 +51,6 @@ public abstract class LiquidRecipes implements Recipe<Container> {
     public NonNullList<Ingredient> getIngredients() {
         NonNullList<Ingredient> nonNull = NonNullList.create();
         nonNull.add(this.ingredient);
-        nonNull.add(this.catalyst);
         return nonNull;
     }
 

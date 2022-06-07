@@ -5,7 +5,7 @@ import static java.lang.annotation.ElementType.*;
 
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target(value={CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, MODULE, PARAMETER, TYPE})
+@Target(value={CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE})
 public @interface NotWorking {
     /**
     * This annotation working like {@link java.lang.Deprecated}, but when this class annotated,
