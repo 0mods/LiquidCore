@@ -1,7 +1,7 @@
 package liquid.objects.block;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.InteractionHand;
@@ -40,10 +40,10 @@ public class SpawnBlockWithActivator extends Block {
                 }
                 entity.spawn((ServerLevel) level, mainItem, player, pos, MobSpawnType.SPAWN_EGG, true, false);
 
-                player.sendMessage(new TranslatableComponent("msg." + modIdForMessage + "." + ForgeRegistries.BLOCKS.getRegistryName().getPath() + ".success"), player.getUUID());
+                player.sendSystemMessage(Component.translatable("msg." + modIdForMessage + "." + ForgeRegistries.BLOCKS.getRegistryName().getPath() + ".success"));
                 return InteractionResult.SUCCESS;
             } else if ((level.getDifficulty() == Difficulty.PEACEFUL) && (mainItem.getItem() == activator && hand == InteractionHand.MAIN_HAND)) {
-                player.sendMessage(new TranslatableComponent("msg." + modIdForMessage + ".amdanorSpawner.peaceful"), player.getUUID());
+                player.sendSystemMessage(Component.translatable("msg." + modIdForMessage + ".amdanorSpawner.peaceful"));
                 return InteractionResult.FAIL;
             }
         }

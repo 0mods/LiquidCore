@@ -84,8 +84,7 @@ public class DynamicScreen extends AbstractContainerScreen<DynamicContainer> {
         bufferBuilder.vertex(matrix4f, (float)x1, (float)y1, (float)z).uv(u1, v1).endVertex();
         bufferBuilder.vertex(matrix4f, (float)x1, (float)y0, (float)z).uv(u1, v0).endVertex();
         bufferBuilder.vertex(matrix4f, (float)x0, (float)y0, (float)z).uv(u0, v0).endVertex();
-        bufferBuilder.end();
-        BufferUploader.end(bufferBuilder);
+        BufferUploader.draw(bufferBuilder.end());
     }
 }
 

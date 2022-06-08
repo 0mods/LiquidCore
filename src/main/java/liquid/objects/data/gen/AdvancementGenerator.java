@@ -6,12 +6,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.FrameType;
+import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.HashCache;
 import net.minecraft.data.advancements.AdvancementProvider;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.progress.LoggerChunkProgressListener;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.data.ExistingFileHelper;
@@ -23,7 +25,6 @@ import java.util.function.Consumer;
 
 public class AdvancementGenerator extends AdvancementProvider {
     private final Path generatorOutput;
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     public AdvancementGenerator(DataGenerator generatorIn, ExistingFileHelper fileHelperIn) {
         super(generatorIn, fileHelperIn);
@@ -31,7 +32,7 @@ public class AdvancementGenerator extends AdvancementProvider {
     }
 
     @Override
-    public void run(HashCache pCache) {
+    public void run(CachedOutput pCache) {
         Set<ResourceLocation> set = Sets.newHashSet();
         Consumer<Advancement> consumer = (advancements -> {
             if (!set.add(advancements.getId())) {
@@ -40,7 +41,7 @@ public class AdvancementGenerator extends AdvancementProvider {
                 Path path = createPath(generatorOutput, advancements);
 
                 try {
-                    DataProvider.save(GSON, pCache, advancements.deconstruct().serializeToJson(), path);
+                    DataProvider.saveStable(pCache, advancements.deconstruct().serializeToJson(), path);
                 } catch (IOException exception) {
                     LiquidCore.log.error("Cannot save advancement: {}", path, exception);
                 }
@@ -55,15 +56,15 @@ public class AdvancementGenerator extends AdvancementProvider {
 
     public static void advancement(Advancement parent, ItemLike display, String name, FrameType frame, boolean showToast, boolean announceToChat, boolean hidden, String modId) {
         Advancement.Builder.advancement().parent(parent).display(display,
-                new TranslatableComponent("advancement." + modId + "." + name),
-                new TranslatableComponent("advancement." + modId + "." + name + ".desc"),
+                Component.translatable("advancement." + modId + "." + name),
+                Component.translatable("advancement." + modId + "." + name + ".desc"),
                 null, frame, showToast, announceToChat, hidden);
     }
 
     public static void advancement(Advancement parent, ItemStack display, String name, FrameType frame, boolean showToast, boolean announceToChat, boolean hidden, String modId) {
         Advancement.Builder.advancement().parent(parent).display(display,
-                new TranslatableComponent("advancement." + modId + "." + name),
-                new TranslatableComponent("advancement." + modId + "." + name + ".desc"),
+                Component.translatable("advancement." + modId + "." + name),
+                Component.translatable("advancement." + modId + "." + name + ".desc"),
                 null, frame, showToast, announceToChat, hidden);
     }
 }

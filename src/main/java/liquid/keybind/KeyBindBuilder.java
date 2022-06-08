@@ -1,10 +1,22 @@
 package liquid.keybind;
 
-public class KeyBindBuilder {
-    public static String build(String modid) {
+import net.minecraft.network.chat.Component;
+
+public abstract class KeyBindBuilder implements MacroHandler {
+    public static Component build(String modid) {
+        return Component.keybind("key.categories.mod." + modid);
+    }
+    public static Component keyBuild(String name, String modid) {
+        return Component.keybind("key." + modid + "." + name);
+    }
+
+    @Deprecated
+    public static String build0(String modid) {
         return String.format("key.categories.mod.%s", modid);
     }
-    public static String keyBuild(String name, String modid) {
+
+    @Deprecated
+    public static String keyBuild0(String name, String modid) {
         return String.format("key.%s.%s", modid, name);
     }
 }
