@@ -29,18 +29,18 @@ public class DynamicContainer extends AdvancedContainerMenu {
         ItemStack stack = player.getItemInHand(hand);
 
         if (stack.getItem() instanceof DynamicItem) {
-            this.loadContainer(playerInventory, stack);
+            this.start(playerInventory, stack);
         }
     }
 
-    private void loadContainer(Inventory inventory, ItemStack itemStack) {
-        Size dimension = this.getDimension();
-        DynamicContainerData type = this.getDynamicItem().getType();
-        int rowWidth = type.getRowWidth();
-        int rows = type.getRowHeight();
+    private void start(Inventory inventory, ItemStack itemStack) {
+        var size = this.getSize();
+        var type = this.getDynamicItem().getType();
+        var rowWidth = type.getRowWidth();
+        var rows = type.getRowHeight();
 
-        ListTag tags = itemStack.getOrCreateTag().getList("Inventory", 10);
-        SimpleContainer simpleContainer = new SimpleContainer(rowWidth * rows) {
+        var tags = itemStack.getOrCreateTag().getList("Inventory", 10);
+        var simpleContainer = new SimpleContainer(rowWidth * rows) {
             @Override
             public void setChanged() {
                 itemStack.getOrCreateTag().put("Inventory", ContainerTag.toNBT(this));
@@ -52,20 +52,20 @@ public class DynamicContainer extends AdvancedContainerMenu {
 
         for (int y = 0; y < rows; y++) {
             for (int x = 0; x < rowWidth; x++) {
-                Point backpackSlotPosition = getBackpackSlotPosition(dimension, x, y);
+                var backpackSlotPosition = getBackpackSlots(size, x, y);
                 addSlot(new LockableSlot(simpleContainer, y * rowWidth + x, backpackSlotPosition.x + 1, backpackSlotPosition.y + 1));
             }
         }
 
         for (int y = 0; y < 3; ++y) {
             for (int x = 0; x < 9; ++x) {
-                Point playerInvSlotPosition = getPlayerInvSlotPosition(dimension, x, y);
+                var playerInvSlotPosition = getPlayerSlots(size, x, y);
                 this.addSlot(new LockableSlot(inventory, x + y * 9 + 9, playerInvSlotPosition.x + 1, playerInvSlotPosition.y + 1));
             }
         }
 
         for (int x = 0; x < 9; ++x) {
-            Point playerInvSlotPosition = getPlayerInvSlotPosition(dimension, x, 3);
+            var playerInvSlotPosition = getPlayerSlots(size, x, 3);
             this.addSlot(new LockableSlot(inventory, x, playerInvSlotPosition.x + 1, playerInvSlotPosition.y + 1));
         }
     }
@@ -74,47 +74,45 @@ public class DynamicContainer extends AdvancedContainerMenu {
         return (DynamicItem) player.getItemInHand(hand).getItem();
     }
 
-    public Size getDimension() {
-        DynamicContainerData type = getDynamicItem().getType();
+    public Size getSize() {
+        var type = getDynamicItem().getType();
         return new Size(padding * 2 + Math.max(type.getRowWidth(), 9) * 18, padding * 2 + titleSpace * 2 + 8 + (type.getRowHeight() + 4) * 18);
     }
 
-    public Point getBackpackSlotPosition(Size dimension, int x, int y) {
-        DynamicContainerData type = getDynamicItem().getType();
+    public Point getBackpackSlots(Size dimension, int x, int y) {
+        var type = getDynamicItem().getType();
         return new Point(dimension.width / 2 - type.getRowWidth() * 9 + x * 18, padding + titleSpace + y * 18);
     }
 
-    public Point getPlayerInvSlotPosition(Size dimension, int x, int y) {
+    public Point getPlayerSlots(Size dimension, int x, int y) {
         return new Point(dimension.width / 2 - 9 * 9 + x * 18, dimension.height - padding - 4 * 18 - 3 + y * 18 + (y == 3 ? 4 : 0));
     }
 
     @Override
     public boolean stillValid(Player pPlayer) {
-        ItemStack stack = pPlayer.getItemInHand(hand);
+        var stack = pPlayer.getItemInHand(hand);
         return stack.getItem() instanceof DynamicItem;
     }
 
     @Override
     public @NotNull ItemStack quickMoveStack(Player player, int index) {
-        ItemStack itemStack = ItemStack.EMPTY;
-        Slot slot = this.slots.get(index);
+        var itemStack = ItemStack.EMPTY;
+        var slot = this.slots.get(index);
         if (slot.hasItem()) {
-            ItemStack toInsert = slot.getItem();
-            itemStack = toInsert.copy();
-            DynamicContainerData type = getDynamicItem().getType();
-            if (index < type.getRowHeight() * type.getRowWidth()) {
-                if (!this.moveItemStackTo(toInsert, type.getRowHeight() * type.getRowWidth(), this.slots.size(), true)) {
+            var stack = slot.getItem();
+            itemStack = stack.copy();
+            var type = getDynamicItem().getType();
+            if (index < type.getRowHeight() * type.getRowWidth())
+                if (!this.moveItemStackTo(stack, type.getRowHeight() * type.getRowWidth(), this.slots.size(), true))
                     return ItemStack.EMPTY;
-                }
-            } else if (!this.moveItemStackTo(toInsert, 0, type.getRowHeight() * type.getRowWidth(), false)) {
+            else if (!this.moveItemStackTo(stack, 0, type.getRowHeight() * type.getRowWidth(), false))
                 return ItemStack.EMPTY;
-            }
 
-            if (toInsert.isEmpty()) {
+            if (stack.isEmpty())
                 slot.set(ItemStack.EMPTY);
-            } else {
+            else
                 slot.setChanged();
-            }
+
         }
 
         return itemStack;

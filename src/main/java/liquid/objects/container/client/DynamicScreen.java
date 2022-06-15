@@ -1,4 +1,4 @@
-package liquid.objects.client;
+package liquid.objects.container.client;
 
 import liquid.LiquidCore;
 import liquid.objects.data.scale.ScaleArray.*;
@@ -19,11 +19,11 @@ public class DynamicScreen extends AbstractContainerScreen<DynamicContainer> {
 
     public DynamicScreen(DynamicContainer pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
-        Size dimension = pMenu.getDimension();
+        Size dimension = pMenu.getSize();
         this.imageWidth = dimension.width;
         this.imageHeight = dimension.height;
         this.titleLabelY = 7;
-        this.inventoryLabelX = pMenu.getPlayerInvSlotPosition(dimension, 0, 0).x;
+        this.inventoryLabelX = pMenu.getPlayerSlots(dimension, 0, 0).x;
         this.titleLabelY = this.imageHeight - 94;
     }
 

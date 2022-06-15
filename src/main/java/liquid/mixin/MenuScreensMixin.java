@@ -1,7 +1,7 @@
 package liquid.mixin;
 
 import liquid.LiquidCore;
-import liquid.objects.client.DynamicScreen;
+import liquid.objects.container.client.DynamicScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
