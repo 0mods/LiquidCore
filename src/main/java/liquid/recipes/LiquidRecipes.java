@@ -54,18 +54,6 @@ public abstract class LiquidRecipes implements Recipe<Container> {
         return nonNull;
     }
 
-    public float getExperience() {
-        return this.experience;
-    }
-
-    public ItemStack getResult() {
-        return this.result;
-    }
-
-    public int getTime() {
-        return this.time;
-    }
-
     @Override
     public ResourceLocation getId() {
         return this.id;
