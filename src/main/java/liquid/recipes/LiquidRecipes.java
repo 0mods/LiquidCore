@@ -11,12 +11,12 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
 public abstract class LiquidRecipes implements Recipe<Container> {
-    protected final RecipeType<?> type;
-    protected final ResourceLocation id;
-    protected final Ingredient ingredient;
-    protected final ItemStack result;
-    protected final float experience;
-    protected final int time;
+    public final RecipeType<?> type;
+    public final ResourceLocation id;
+    public final Ingredient ingredient;
+    public final ItemStack result;
+    public final float experience;
+    public final int time;
 
     public LiquidRecipes(RecipeType<?> typeIn, ResourceLocation idIn, Ingredient ingredientIn,
                          ItemStack resultIn, float experienceIn, int time) {
