@@ -1,15 +1,20 @@
 package liquid.config;
 
 import liquid.LiquidCore;
+import net.minecraft.util.GsonHelper;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.forgespi.language.IModInfo;
 import net.minecraftforge.forgespi.language.ModFileScanData;
+import org.hjson.JsonObject;
+import org.hjson.JsonValue;
 
+import java.io.File;
 import java.util.function.Consumer;
 
 public abstract class ExtendableConfig {
@@ -17,7 +22,7 @@ public abstract class ExtendableConfig {
 
     public ExtendableConfig(ForgeConfigSpec.Builder b) {}
 
-    public abstract void ifReloading(ModConfigEvent event);
+    public abstract void reloadContext(ModConfigEvent event);
 
     public void setConfigSpec(ForgeConfigSpec spec) {
         this.configSpec = spec;
@@ -38,18 +43,18 @@ public abstract class ExtendableConfig {
     private static <T extends ExtendableConfig> T buildingConfig(ModConfig.Type type, Class<T> tClass, Boolean reloadable) {
         ModContainer modContainer = ModLoadingContext.get().getActiveContainer();
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
+        String modId = modContainer.getModId();
 
-        T compile;
+        T creatingConfigFileFromClass; //CCFFC
 
         try {
-            compile = tClass.getConstructor(ForgeConfigSpec.Builder.class).newInstance(builder);
+            creatingConfigFileFromClass = tClass.getConstructor(ForgeConfigSpec.Builder.class).newInstance(builder);
         } catch (Throwable throwable) {
             throw new IllegalStateException(throwable);
         }
 
-        String modId = modContainer.getModId();
-
         ForgeConfigSpec spec = builder.build();
+
         if (modId != null) {
             LiquidCore.log.debug(
                     """
@@ -59,18 +64,22 @@ public abstract class ExtendableConfig {
                             Config directory: config/liquid/{}/{}.toml
                             """, modId, type, tClass, modId, type.extension()
             );
+
             ModLoadingContext.get().registerConfig(type, spec, "liquid/" + modId + "/" + type.extension() + ".toml");
+
         }
+
         if (reloadable.equals(true)) {
             Consumer<ModConfigEvent> configEventConsumer = event -> {
                 if (event.getConfig().getType() == type) {
-                    compile.ifReloading(event);
+                    creatingConfigFileFromClass.reloadContext(event);
                 }
             };
 
             FMLJavaModLoadingContext.get().getModEventBus().addListener(configEventConsumer);
+
         }
 
-        return compile;
+        return creatingConfigFileFromClass;
     }
 }

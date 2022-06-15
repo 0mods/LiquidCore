@@ -2,6 +2,7 @@ package liquid.keybind;
 
 import net.minecraft.network.chat.Component;
 
+@Deprecated(forRemoval = true)
 public abstract class KeyBindBuilder implements MacroHandler {
     public static Component build(String modid) {
         return Component.keybind("key.categories.mod." + modid);

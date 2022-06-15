@@ -6,7 +6,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.+', changing: true
         classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
     }
 }
@@ -30,6 +30,11 @@ version = "${mod_version_full}"
 java {
     archivesBaseName = modId
     toolchain.languageVersion = JavaLanguageVersion.of(17)
+}
+
+configurations {
+    shade
+    compile.extendsFrom shade
 }
 
 minecraft {
@@ -108,6 +113,9 @@ dependencies {
     annotationProcessor 'org.spongepowered:mixin:0.8:processor'
 
     minecraft "net.minecraftforge:forge:${ForgeVersion}"
+
+    shade("org.hjson:hjson:3.0.0")
+    implementation("org.hjson:hjson:3.0.0")
 }
 
 jar {
@@ -122,6 +130,12 @@ jar {
                 "MixinConfigs"            : "liquid.mixins.json",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
+    }
+
+    configurations.shade.each { dep ->
+        from(project.zipTree(dep)){
+            exclude 'META-INF', 'META-INF/**'
+        }
     }
 }
 
