@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "liquid",
+  "version": "${version}",
+  "name": "LiquidCore",
+  "description": "Small api for my mods.",
+  "authors": [
+    "AlgorithmLX"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "liquid.LiquidCore"
+    ]
+  },
+  "mixins": [
+    "LiquidCore.mixin.json"
+  ],
+  "depends": {
+    "fabricloader": "*"
+  }
+}

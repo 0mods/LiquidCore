@@ -1,26 +1,15 @@
 package liquid;
 
-import liquid.config.ExtendableConfig;
-import liquid.config.LiquidConfig;
-import liquid.dynamic.container.DynamicContainer;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import net.fabricmc.api.ModInitializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Mod(LiquidCore.ModId)
-public class LiquidCore {
-    public static final Logger log = LogManager.getLogger("LiquidCore Logger");
+public class LiquidCore implements ModInitializer {
     public static final String ModId = "liquid";
+    public static final Logger LOGGER = LoggerFactory.getLogger(ModId);
 
-    public static MenuType<DynamicContainer> CONTAINER_TYPE;
-
-    public static LiquidConfig COMMON;
-
-    public LiquidCore() {
-
-        COMMON = ExtendableConfig.of(ModConfig.Type.COMMON, LiquidConfig.class);
-        log.info("LIQUID CORE SUCCESSFULLY STARTED");
+    @Override
+    public void onInitialize() {
+        LOGGER.info("LiquidCore is loaded!");
     }
 }

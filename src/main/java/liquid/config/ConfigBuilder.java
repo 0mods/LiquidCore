@@ -1,102 +1,162 @@
 package liquid.config;
 
 import liquid.LiquidCore;
-import liquid.objects.annotations.Config;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.ModContainer;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.forgespi.language.IModInfo;
-import net.minecraftforge.forgespi.language.ModFileScanData;
-import org.objectweb.asm.Type;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import net.minecraft.client.Minecraft;
+import org.apache.commons.io.FileUtils;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.function.Consumer;
-//fixme: 06.08.2022
-abstract class ConfigBuilder {
-    private static final Type CONFIG_TYPE = Type.getType(Config.class);
-    protected ForgeConfigSpec configSpec;
+import java.lang.reflect.Modifier;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
-    public ConfigBuilder(ForgeConfigSpec.Builder b) {}
+public class ConfigBuilder {
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private final Class<?> className;
+    private final String name;
 
-    public abstract void ifReloading(ModConfigEvent event);
-
-    public void setConfigSpec(ForgeConfigSpec spec) {
-        this.configSpec = spec;
+    public ConfigBuilder(Class<?> className, String name) {
+        this.className = className;
+        this.name = name;
+        setup();
     }
 
-    public ForgeConfigSpec getConfigSpec() {
-        return configSpec;
-    }
+    private void setup() {
+        final File configDir = new File(Minecraft.getInstance().gameDirectory, name);
 
-//    public static <T extends ConfigBuilder> T of(ModConfig.Type type, Class<T> config) {
-//        return buildingConfig(type, config, false);
-//    }
+        if (!configDir.exists()) {
+            configDir.mkdirs();
+        }
 
-    public static <T extends ConfigBuilder> T of(Class<T> config) {
-        return buildingConfig(config);
-    }
+        final File[] configFiles = configDir.listFiles();
+        if (configFiles != null) {
+            final HashMap<String, JsonObject> configs = new HashMap<>();
+            for (File file : configFiles) {
+                final String name = "liquid/" + file.getName().substring(0, file.getName().length() - (".json".length()));
+                try {
+                    final String fileContents = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+                    final JsonObject jsonObject = GSON.fromJson(fileContents, JsonObject.class);
+                    configs.put(name, jsonObject);
+                } catch (IOException e) {
+                    LiquidCore.LOGGER.error("Failed to read config file: " + file.getName());
+                    e.printStackTrace();
+                }
+            }
+            readFromJson(configs);
+        }
 
-    private static <T extends ConfigBuilder> T buildingConfig(Class<T> tClass) {
-        ModContainer modContainer = ModLoadingContext.get().getActiveContainer();
-        IModInfo modInfo = modContainer.getModInfo();
-        ModFileScanData scanData = modInfo.getOwningFile().getFile().getScanResult();
-
-        ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
-        T compile;
-
+        for (Map.Entry<String, JsonObject> entry : toJson().entrySet()) {
+            final File configFile = new File(configDir, entry.getKey() + ".json");
+            final String jsonStr = GSON.toJson(entry.getValue());
             try {
-                compile = tClass.getConstructor(ForgeConfigSpec.Builder.class).newInstance(builder);
-            } catch (Throwable throwable) {
-                throw new IllegalStateException(throwable);
+                FileUtils.writeStringToFile(configFile, jsonStr, StandardCharsets.UTF_8);
+            } catch (IOException e) {
+                LiquidCore.LOGGER.error("Failed to write config file: " + configFile.getAbsolutePath());
+                throw new RuntimeException("Failed to write config file: " + configFile.getAbsolutePath(), e);
+            }
+        }
+    }
+
+    private HashMap<Field, Config> getConfigFields() {
+        final HashMap<Field, Config> fieldMap = new HashMap<>();
+        for (Field field : className.getDeclaredFields()) {
+            if (!field.isAnnotationPresent(Config.class)) {
+                continue;
+            }
+            if (!Modifier.isStatic(field.getModifiers())) {
+                throw new UnsupportedOperationException("Config field must be static");
+            }
+            Config annotation = field.getAnnotation(Config.class);
+            fieldMap.put(field, annotation);
+        }
+        return fieldMap;
+    }
+
+    public HashMap<String, JsonObject> toJson() {
+        final HashMap<Field, Config> fieldMap = getConfigFields();
+        final HashMap<String, JsonObject> configs = new HashMap<>();
+
+        for (Map.Entry<Field, Config> entry : fieldMap.entrySet()) {
+            Field field = entry.getKey();
+            Config annotation = entry.getValue();
+
+            final JsonObject config = configs.computeIfAbsent(annotation.name(), s -> new JsonObject());
+
+            JsonObject categoryObject;
+            if (config.has(annotation.category())) {
+                categoryObject = config.getAsJsonObject(annotation.category());
+            } else {
+                categoryObject = new JsonObject();
+                config.add(annotation.category(), categoryObject);
             }
 
-            scanData.getAnnotations().stream().filter(aData -> aData.annotationType().equals(CONFIG_TYPE)).forEach(
-                    annotationData -> {
-                        if (scanData.getAnnotations().equals(CONFIG_TYPE)) {
-                            String fieldName = annotationData.memberName();
-                            Field field = findField(fieldName);
-                            field.setAccessible(true);
-                            boolean reloadable = field.getAnnotation(Config.class).reloadable();
-                            ModConfig.Type type = field.getAnnotation(Config.class).type();
+            String key = field.getName();
+            if (categoryObject.has(key)) {
+                throw new UnsupportedOperationException("Some bad happened, duplicate key found: " + key);
+            }
 
-                            String modId = modContainer.getModId();
+            JsonObject fieldObject = new JsonObject();
+            fieldObject.addProperty("comment", annotation.comment());
 
-                            ForgeConfigSpec spec = builder.build();
-                            if (modId != null) {
-                                LiquidCore.log.debug(
-                                        """
-                                                Generating config for ModId: {}.\s
-                                                Config type: {}.\s
-                                                Config class: {}.\s
-                                                Config directory: config/liquid/{}/{}.toml
-                                                """, modId, type, tClass, modId, type.extension()
-                                );
-                                ModLoadingContext.get().registerConfig(type, spec, "liquid/" + modId + "/" + type.extension() + ".toml");
-                            }
-                            if (reloadable) {
-                                Consumer<ModConfigEvent> configEventConsumer = event -> {
-                                    if (event.getConfig().getType() == type) {
-                                        compile.ifReloading(event);
-                                    }
-                                };
+            Object value;
+            try {
+                value = field.get(null);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
 
-                                FMLJavaModLoadingContext.get().getModEventBus().addListener(configEventConsumer);
-                            }
-                        }
-                    }
-            );
-            return compile;
+            JsonElement jsonElement = GSON.toJsonTree(value);
+            fieldObject.add("value", jsonElement);
+
+            categoryObject.add(key, fieldObject);
+        }
+
+        return configs;
     }
 
-    public static Field findField(String fieldName) {
-        try {
-            return Config.class.getDeclaredField(fieldName);
-        } catch (Throwable e) {
-            throw new RuntimeException("Can't retrieve field " + fieldName + " from class " + Config.class, e);
+    public void readFromJson(HashMap<String, JsonObject> configs) {
+        final HashMap<Field, Config> fieldMap = getConfigFields();
+
+        for (Map.Entry<Field, Config> entry : fieldMap.entrySet()) {
+            Field field = entry.getKey();
+            Config annotation = entry.getValue();
+
+            final JsonObject config = configs.get(annotation.name());
+
+            if (config == null) {
+                continue;
+            }
+
+            JsonObject categoryObject = config.getAsJsonObject(annotation.category());
+            if (categoryObject == null) {
+                continue;
+            }
+
+            String key = field.getName();
+            if (!categoryObject.has(key)) {
+                continue;
+            }
+
+            JsonObject fieldObject = categoryObject.get(key).getAsJsonObject();
+            if (!fieldObject.has("value")) {
+                continue;
+            }
+            JsonElement jsonValue = fieldObject.get("value");
+            Class<?> fieldType = field.getType();
+
+            Object fieldValue = GSON.fromJson(jsonValue, fieldType);
+
+            try {
+                field.set(null, fieldValue);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException("Failed to set field value", e);
+            }
         }
     }
 }
-

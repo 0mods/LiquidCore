@@ -1,182 +1,81 @@
-//file:noinspection all
-buildscript {
-    repositories {
-        maven { url = 'https://maven.minecraftforge.net' }
-        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.+', changing: true
-        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
-    }
-}
-
 plugins {
-    id "com.modrinth.minotaur" version "2.+"
-    id "com.matthewprenger.cursegradle" version "1.4.0"
+    id 'fabric-loom' version '0.12-SNAPSHOT'
+    id 'maven-publish'
 }
 
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'org.spongepowered.mixin'
-apply plugin: 'maven-publish'
-
-String mod_version_full = "${mc_ver}_${ver}"
-String ForgeVersion = "${mc_ver}-${forge_ver}"
-String ReleaseType = "$rtype"
-
-group = 'com.algorithmlx'
-version = "${mod_version_full}"
-
-java {
-    archivesBaseName = modId
-    toolchain.languageVersion = JavaLanguageVersion.of(17)
-}
-
-configurations {
-    shade
-    compile.extendsFrom shade
-}
-
-minecraft {
-    mappings channel: 'official', version: "${mc_ver}"
-
-    // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-
-    runs {
-        client {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-
-            arg "-mixin.config=liquid.mixins.json"
-
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                liquidcore {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        server {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-
-            arg "-mixin.config=liquid.mixins.json"
-
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                liquidcore {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        data {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-
-            property 'forge.logging.console.level', 'debug'
-
-            args '--mod', 'liquid', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-
-            mods {
-                liquidcore {
-                    source sourceSets.main
-                }
-            }
-        }
-    }
-}
-
-mixin {
-    add sourceSets.main, "liquid.refmap.json"
-}
-
-sourceSets.main.resources { srcDir 'src/generated/resources' }
+version = project.mod_version
+group = project.maven_group
 
 repositories {
-    maven {
-        name = "Dv8tion maven"
-        url = "https://m2.dv8tion.net/releases"
-    }
-
-    mavenCentral()
-    jcenter()
+    // Add repositories to retrieve artifacts from in here.
+    // You should only use this when depending on other mods because
+    // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
+    // See https://docs.gradle.org/current/userguide/declaring_repositories.html
+    // for more information about repositories.
 }
 
 dependencies {
-    annotationProcessor 'org.spongepowered:mixin:0.8:processor'
+    // To change the versions see the gradle.properties file
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-    minecraft "net.minecraftforge:forge:${ForgeVersion}"
+    // Fabric API. This is technically optional, but you probably want it anyway.
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+}
 
-    shade("org.hjson:hjson:3.0.0")
-    implementation("org.hjson:hjson:3.0.0")
+processResources {
+    inputs.property "version", project.version
+    filteringCharset "UTF-8"
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+def targetJavaVersion = 17
+tasks.withType(JavaCompile).configureEach {
+    // ensure that the encoding is set to UTF-8, no matter what the system default is
+    // this fixes some edge cases with special characters not displaying correctly
+    // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
+    // If Javadoc is generated, this must be specified in that task too.
+    it.options.encoding = "UTF-8"
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+        it.options.release = targetJavaVersion
+    }
+}
+
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+    archivesBaseName = project.archives_base_name
+    // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+    // if it is present.
+    // If you remove this line, sources will not be generated.
+    withSourcesJar()
 }
 
 jar {
-    manifest {
-        attributes([
-                "Specification-Title"     : archivesBaseName,
-                "Specification-Vendor"    : "AlgorithmLX",
-                "Specification-Version"   : "1",
-                "Implementation-Title"    : project.name,
-                "Implementation-Version"  : project.jar.archiveVersion,
-                "Implementation-Vendor"   : "AlgorithmLX",
-                "MixinConfigs"            : "liquid.mixins.json",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
-    }
-
-    configurations.shade.each { dep ->
-        from(project.zipTree(dep)){
-            exclude 'META-INF', 'META-INF/**'
-        }
+    from("LICENSE") {
+        rename { "${it}_${project.archivesBaseName}" }
     }
 }
 
-jar.finalizedBy('reobfJar')
-
-apply plugin: "java"
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
-}
-
+// configure the maven publication
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifactId project.archivesBaseName
-
-            artifact jar
+            from components.java
         }
     }
 
+    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
     repositories {
-        maven {
-            url mavenUrl
-            credentials {
-                username mavenUsername
-                password mavenPassword
-            }
-        }
+        // Add repositories to publish to here.
+        // Notice: This block does NOT have the same function as the block in the top level.
+        // The repositories here will be used for publishing your artifact, not for
+        // retrieving dependencies.
     }
-}
-
-modrinth {
-    token = modrinthToken
-    projectId = modtinthLiquidId
-    versionNumber = "$ver"
-    versionType = ReleaseType
-    uploadFile = jar
-    gameVersions = [
-            "$mc_ver"
-    ]
-    loaders = [
-            "forge"
-    ]
-
 }
