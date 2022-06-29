@@ -1,12 +1,12 @@
 package liquid.config;
 
 import liquid.LiquidCore;
+import liquid.objects.annotations.Config;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import liquid.objects.annotations.Config;
-import net.minecraft.client.Minecraft;
+import net.fabricmc.loader.impl.FabricLoaderImpl;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -22,14 +22,14 @@ public class ConfigBuilder {
     private final Class<?> className;
     private final String name;
 
-    public ConfigBuilder(Class<?> className, String name) {
+    protected ConfigBuilder(Class<?> className, String name) {
         this.className = className;
         this.name = name;
         setup();
     }
 
     private void setup() {
-        final File configDir = new File(Minecraft.getInstance().gameDirectory, name);
+        final File configDir = new File(FabricLoaderImpl.INSTANCE.getConfigDir().toFile(), name);
 
         if (!configDir.exists()) {
             configDir.mkdirs();
@@ -159,5 +159,9 @@ public class ConfigBuilder {
                 throw new RuntimeException("Failed to set field value", e);
             }
         }
+    }
+
+    public static void build(String modId, Class<?> clazz) {
+        new ConfigBuilder(clazz, modId);
     }
 }

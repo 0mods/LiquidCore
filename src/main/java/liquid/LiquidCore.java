@@ -1,5 +1,7 @@
 package liquid;
 
+import liquid.config.ConfigBuilder;
+import liquid.config.LiquidConfig;
 import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +12,8 @@ public class LiquidCore implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        LOGGER.info("Loading LiquidCore");
+        ConfigBuilder.build(ModId, LiquidConfig.class);
         LOGGER.info("LiquidCore is loaded!");
     }
 }
