@@ -2,10 +2,13 @@ package liquid.network;
 
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.DistExecutor.*;
 
 public interface Direction {
+    void eventRegistry(Event event);
+
     void init();
 
     boolean clientSide();
