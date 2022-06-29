@@ -10,6 +10,7 @@
   "contact": {},
   "license": "MIT",
   "environment": "*",
+  "accessWidener": "liquidcore.accesswidener",
   "entrypoints": {
     "main": [
       "liquid.LiquidCore"

@@ -1,4 +1,4 @@
-package liquid.config;
+package liquid.objects.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
