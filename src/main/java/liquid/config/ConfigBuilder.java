@@ -46,7 +46,7 @@ public class ConfigBuilder {
                     final JsonObject jsonObject = GSON.fromJson(fileContents, JsonObject.class);
                     configs.put(name, jsonObject);
                 } catch (IOException e) {
-                    LiquidCore.LOGGER.error("Failed to read config file: " + file.getName());
+                    LiquidCore.LOGGER.error("Failed to load config file: " + file.getName());
                     e.printStackTrace();
                 }
             }
@@ -59,8 +59,8 @@ public class ConfigBuilder {
             try {
                 FileUtils.writeStringToFile(configFile, jsonStr, StandardCharsets.UTF_8);
             } catch (IOException e) {
-                LiquidCore.LOGGER.error("Failed to write config file: " + configFile.getAbsolutePath());
-                throw new RuntimeException("Failed to write config file: " + configFile.getAbsolutePath(), e);
+                LiquidCore.LOGGER.error("Failed to save config file: " + configFile.getAbsolutePath());
+                throw new RuntimeException("Failed to save config file: " + configFile.getAbsolutePath(), e);
             }
         }
     }
@@ -72,7 +72,7 @@ public class ConfigBuilder {
                 continue;
             }
             if (!Modifier.isStatic(field.getModifiers())) {
-                throw new UnsupportedOperationException("Config field must be static");
+                throw new UnsupportedOperationException("Field \"" + field.getName() + "\" is not static");
             }
             Config annotation = field.getAnnotation(Config.class);
             fieldMap.put(field, annotation);
