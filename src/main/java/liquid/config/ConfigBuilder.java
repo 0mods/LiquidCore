@@ -17,6 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings("all")
 public class ConfigBuilder {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private final Class<?> className;
@@ -87,14 +88,14 @@ public class ConfigBuilder {
             Field field = entry.getKey();
             Config annotation = entry.getValue();
 
-            final JsonObject config = configs.computeIfAbsent(annotation.name(), s -> new JsonObject());
+            final JsonObject config = configs.computeIfAbsent(annotation.modId(), s -> new JsonObject());
 
             JsonObject categoryObject;
-            if (config.has(annotation.category())) {
-                categoryObject = config.getAsJsonObject(annotation.category());
+            if (config.has(annotation.dist())) {
+                categoryObject = config.getAsJsonObject(annotation.dist());
             } else {
                 categoryObject = new JsonObject();
-                config.add(annotation.category(), categoryObject);
+                config.add(annotation.dist(), categoryObject);
             }
 
             String key = field.getName();
@@ -128,13 +129,13 @@ public class ConfigBuilder {
             Field field = entry.getKey();
             Config annotation = entry.getValue();
 
-            final JsonObject config = configs.get(annotation.name());
+            final JsonObject config = configs.get(annotation.modId());
 
             if (config == null) {
                 continue;
             }
 
-            JsonObject categoryObject = config.getAsJsonObject(annotation.category());
+            JsonObject categoryObject = config.getAsJsonObject(annotation.dist());
             if (categoryObject == null) {
                 continue;
             }
