@@ -1,5 +1,6 @@
 plugins {
     id 'fabric-loom' version '0.12-SNAPSHOT'
+    id "com.modrinth.minotaur" version "2.+"
     id 'maven-publish'
 }
 
@@ -48,5 +49,25 @@ java {
 jar {
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}" }
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId project.archivesBaseName
+
+            artifact jar
+        }
+    }
+
+    repositories {
+        maven {
+            url mavenUrl
+            credentials {
+                username mavenUsername
+                password mavenPassword
+            }
+        }
     }
 }
