@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerLevel.class)
-public abstract class LevelTicking {
+public class LevelTicking {
     @Shadow @Final
     private ServerLevelData serverLevelData;
     @Shadow @Final
@@ -20,7 +20,7 @@ public abstract class LevelTicking {
 
     @Inject(method = "tickTime", at = @At("HEAD"))
     public void tickInject(CallbackInfo ci) {
-        TickEvent event = TickEvent.get();
+        TickEvent event = TickEvent.getTicking();
         serverLevelData.getScheduledEvents().tick(this.server, event.elapsingTick());
     }
 }
