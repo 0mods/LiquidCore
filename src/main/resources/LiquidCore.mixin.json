@@ -6,12 +6,15 @@
   "refmap": "liquid.refmap.json",
   "mixins": [
     "common.ArmorTickingMixin",
-    "common.ItemStackMixin"
+    "common.ItemStackMixin",
+    "common.LevelTicking",
+    "common.CreativeModeTabMixin"
+  ],
+  "client": [
+    "client.HumanoidArmorLayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "client": [
-    "client.HumanoidArmorLayerMixin"
-  ]
+  }
+
 }
