@@ -79,13 +79,13 @@ public class DynamicContainer extends AdvancedContainerMenu {
         return new Size(padding * 2 + Math.max(type.getRowWidth(), 9) * 18, padding * 2 + titleSpace * 2 + 8 + (type.getRowHeight() + 4) * 18);
     }
 
-    public Point getBackpackSlots(Size dimension, int x, int y) {
+    public Point getBackpackSlots(Size size, int x, int y) {
         var type = getDynamicItem().getType();
-        return new Point(dimension.width / 2 - type.getRowWidth() * 9 + x * 18, padding + titleSpace + y * 18);
+        return new Point(size.width / 2 - type.getRowWidth() * 9 + x * 18, padding + titleSpace + y * 18);
     }
 
-    public Point getPlayerSlots(Size dimension, int x, int y) {
-        return new Point(dimension.width / 2 - 9 * 9 + x * 18, dimension.height - padding - 4 * 18 - 3 + y * 18 + (y == 3 ? 4 : 0));
+    public Point getPlayerSlots(Size size, int x, int y) {
+        return new Point(size.width / 2 - 9 * 9 + x * 18, size.height - padding - 4 * 18 - 3 + y * 18 + (y == 3 ? 4 : 0));
     }
 
     @Override
@@ -102,17 +102,15 @@ public class DynamicContainer extends AdvancedContainerMenu {
             var stack = slot.getItem();
             itemStack = stack.copy();
             var type = getDynamicItem().getType();
+
             if (index < type.getRowHeight() * type.getRowWidth())
                 if (!this.moveItemStackTo(stack, type.getRowHeight() * type.getRowWidth(), this.slots.size(), true))
                     return ItemStack.EMPTY;
             else if (!this.moveItemStackTo(stack, 0, type.getRowHeight() * type.getRowWidth(), false))
                 return ItemStack.EMPTY;
 
-            if (stack.isEmpty())
-                slot.set(ItemStack.EMPTY);
-            else
-                slot.setChanged();
-
+            if (stack.isEmpty()) slot.set(ItemStack.EMPTY);
+            else slot.setChanged();
         }
 
         return itemStack;

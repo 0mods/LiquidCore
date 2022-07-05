@@ -1,6 +1,7 @@
 package liquid.objects.container.client;
 
 import liquid.LiquidCore;
+import liquid.config.LiquidConfig;
 import liquid.objects.data.scale.ScaleArray.*;
 import liquid.dynamic.container.DynamicContainer;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -16,15 +17,18 @@ import org.jetbrains.annotations.NotNull;
 
 public class DynamicScreen extends AbstractContainerScreen<DynamicContainer> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(LiquidCore.ModId, "textures/dynamic_gui.png");
+    private final int textColor = Integer.decode(LiquidConfig.colorInText);
+
 
     public DynamicScreen(DynamicContainer pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
-        Size dimension = pMenu.getSize();
-        this.imageWidth = dimension.width;
-        this.imageHeight = dimension.height;
+
+        Size size = pMenu.getSize();
+        this.imageWidth = size.width;
+        this.imageHeight = size.height;
         this.titleLabelY = 7;
-        this.inventoryLabelX = pMenu.getPlayerSlots(dimension, 0, 0).x;
-        this.titleLabelY = this.imageHeight - 94;
+        this.inventoryLabelX = pMenu.getPlayerSlots(size, 0, 0).x;
+        this.inventoryLabelY = this.imageHeight - 94;
     }
 
 
@@ -45,8 +49,15 @@ public class DynamicScreen extends AbstractContainerScreen<DynamicContainer> {
     public void render(@NotNull PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
         renderBackground(pPoseStack);
         super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
-        if (LiquidCore.COMMON.renderText.get().equals(true))
-            renderTooltip(pPoseStack, pMouseX, pMouseY);
+        renderTooltip(pPoseStack, pMouseX, pMouseY);
+    }
+
+    @Override
+    protected void renderLabels(PoseStack p_97808_, int p_97809_, int p_97810_) {
+        if (LiquidConfig.renderText.equals(true)) {
+            font.draw(p_97808_, title, p_97809_, p_97810_, textColor);
+            font.draw(p_97808_, playerInventoryTitle, inventoryLabelX, inventoryLabelY, textColor);
+        }
     }
 
     public void renderBgTexture(PoseStack poseStack, Rectangle bounds, int color) {
@@ -57,6 +68,7 @@ public class DynamicScreen extends AbstractContainerScreen<DynamicContainer> {
 
         RenderSystem.clearColor(red, green, blue, alpha);
         RenderSystem.setShaderTexture(0, TEXTURE);
+
         int x = bounds.x, y = bounds.y, width = bounds.width, height = bounds.height;
         int xTextureOffset = 0;
         int yTextureOffset = 66;

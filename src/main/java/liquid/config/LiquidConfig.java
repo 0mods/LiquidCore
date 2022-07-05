@@ -1,20 +1,10 @@
 package liquid.config;
 
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
+import liquid.objects.annotations.Config;
 
-public final class LiquidConfig extends ExtendableConfig {
-    public final ForgeConfigSpec.BooleanValue renderText;
-
-    public LiquidConfig(ForgeConfigSpec.Builder builder) {
-        super(builder);
-        builder.push("LiquidCore Config");
-        this.renderText = builder.define("screen.dynamic.renderText", false);
-        builder.pop();
-    }
-
-    @Override
-    public void reloadContext(ModConfigEvent event) {
-
-    }
+public class LiquidConfig {
+    @Config
+    public static Boolean renderText = true;
+    @Config(comment = "Color on dynamic screens(backpacks)")
+    public static String colorInText = "0x000000";
 }
