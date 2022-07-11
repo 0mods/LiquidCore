@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "liquid.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "ArmorTickMixin",
+    "CreativeModeTabMixin"
+  ],
+  "client": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
+  

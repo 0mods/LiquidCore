@@ -1,0 +1,32 @@
+{
+    "schemaVersion": 1,
+    "id": "liquid",
+    "version": "${version}",
+  
+    "name": "LiquidCore",
+    "description": "This is an example description! Tell everyone what your mod is about!",
+    "authors": [
+      "AlgorithmLX"
+    ],
+    "contact": {
+    },
+  "icon": "icon.png",
+    "license": "MIT",
+  
+    "environment": "*",
+    "entrypoints": {
+      "main": [
+        "liquid.LiquidCore"
+      ]
+    },
+    "mixins": [
+      "liquid_fabric.mixin.json"
+    ],
+  
+    "depends": {
+      "fabricloader": ">=0.14",
+      "minecraft": "1.19.x",
+      "java": ">=17"
+    }
+  }
+  

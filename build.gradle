@@ -1,187 +1,60 @@
-//file:noinspection all
-buildscript {
+subprojects {
+    apply plugin: 'java'
+    
+    java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+    java.withSourcesJar()
+    java.withJavadocJar()
+        
+    jar {
+        from(rootProject.file("LICENSE")) {
+            rename { "${it}_${mod_name}" }
+        }
+        manifest {
+            attributes([
+                'Specification-Title'     : mod_name,
+                'Specification-Vendor'    : mod_author,
+                'Specification-Version'   : project.jar.archiveVersion,
+                'Implementation-Title'    : project.name,
+                'Implementation-Version'  : project.jar.archiveVersion,
+                'Implementation-Vendor'   : mod_author,
+                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                'Timestampe'              : System.currentTimeMillis(),
+                'Built-On-Java'           : "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
+                'Build-On-Minecraft'      : minecraft_version
+            ])
+        }
+    }
+
+    sourcesJar {
+        from(rootProject.file("LICENSE")) {
+            rename { "${it}_${mod_name}" }
+        }
+    }
+
     repositories {
-        maven { url = 'https://maven.minecraftforge.net' }
-        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
         mavenCentral()
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.+', changing: true
-        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
-    }
-}
-
-plugins {
-    id "com.modrinth.minotaur" version "2.+"
-    id "com.matthewprenger.cursegradle" version "1.4.0"
-}
-
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'org.spongepowered.mixin'
-apply plugin: 'maven-publish'
-
-String mod_version_full = "${mc_ver}_${ver}"
-String ForgeVersion = "${mc_ver}-${forge_ver}"
-String ReleaseType = "$rtype"
-
-group = 'com.algorithmlx'
-version = "${mod_version_full}"
-
-java {
-    archivesBaseName = modId
-    toolchain.languageVersion = JavaLanguageVersion.of(17)
-}
-
-minecraft {
-    mappings channel: 'official', version: "${mc_ver}"
-
-    // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-
-    runs {
-        client {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-
-            arg "-mixin.config=liquid.mixins.json"
-
-            property 'forge.logging.console.level', 'debug'
-
-            property 'mixin.env.remapRefMap', 'true'
-
-            property 'mixin.env.refMapRemappingFile',"${buildDir}/createSrgToMcp/output.srg"
-
-            mods {
-                liquidcore {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        server {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-
-            arg "-mixin.config=liquid.mixins.json"
-
-            property 'forge.logging.console.level', 'debug'
-
-            property 'mixin.env.remapRefMap', 'true'
-
-            property 'mixin.env.refMapRemappingFile',"${buildDir}/createSrgToMcp/output.srg"
-
-            mods {
-                liquidcore {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        data {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-
-            property 'forge.logging.console.level', 'debug'
-
-            args '--mod', 'liquid', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-
-            mods {
-                liquidcore {
-                    source sourceSets.main
-                }
-            }
-        }
-    }
-}
-
-mixin {
-    add sourceSets.main, "liquid.refmap.json"
-}
-
-sourceSets.main.resources { srcDir 'src/generated/resources' }
-
-repositories {
-    maven {
-        name = "Dv8tion maven"
-        url = "https://m2.dv8tion.net/releases"
-    }
-
-    mavenCentral()
-    jcenter()
-}
-
-dependencies {
-    annotationProcessor 'org.spongepowered:mixin:0.8:processor'
-
-    minecraft "net.minecraftforge:forge:${ForgeVersion}"
-
-    jarJar fg.deobf(group: 'com.github.glitchfiend', name: 'TerraBlender-forge', version: '1.19-2.0.0.117') {
-        jarJar.ranged(it, "[2.0,3.0)")
-    }
-
-    jarJar(group: 'org.hjson', name: 'hjson', version: '3.0.0') {
-        jarJar.ranged(it, "[3.0,)")
-    }
-}
-
-jar {
-    manifest {
-        attributes([
-                "Specification-Title"     : archivesBaseName,
-                "Specification-Vendor"    : "AlgorithmLX",
-                "Specification-Version"   : "1",
-                "Implementation-Title"    : project.name,
-                "Implementation-Version"  : project.jar.archiveVersion,
-                "Implementation-Vendor"   : "AlgorithmLX",
-                "MixinConfigs"            : "liquid.mixins.json",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
-    }
-}
-
-jar.finalizedBy('reobfJar')
-
-apply plugin: "java"
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            jarJar.component(it)
-
-            artifactId project.archivesBaseName
-
-            artifact jar
-        }
-    }
-
-    repositories {
         maven {
-            url mavenUrl
-            credentials {
-                username mavenUsername
-                password mavenPassword
-            }
+            name = 'Sponge / Mixin'
+            url = 'https://repo.spongepowered.org/repository/maven-public/'
+        }
+
+        maven {
+            name = 'BlameJared Maven (CrT / Bookshelf)'
+            url = 'https://maven.blamejared.com'
         }
     }
-}
 
-modrinth {
-    token = modrinthToken
-    projectId = modtinthLiquidId
-    versionNumber = "$ver"
-    versionType = ReleaseType
-    uploadFile = jar
-    gameVersions = [
-            "$mc_ver"
-    ]
-    loaders = [
-            "forge"
-    ]
+    tasks.withType(JavaCompile).configureEach {
+    
+        it.options.encoding = 'UTF-8'
+        it.options.release = 17
+    }
 
+    // Disables Gradle's custom module metadata from being published to maven. The
+    // metadata includes mapped dependencies which are not reasonably consumable by
+    // other mod developers.
+    tasks.withType(GenerateModuleMetadata) {
+
+        enabled = false
+    }
 }
