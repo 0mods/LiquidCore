@@ -155,8 +155,6 @@ publishing {
             jarJar.component(it)
 
             artifactId project.archivesBaseName
-
-            artifact jar
         }
     }
 
