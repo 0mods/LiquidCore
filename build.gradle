@@ -1,12 +1,6 @@
 //file:noinspection all
 buildscript {
-    repositories {
-        maven { url = 'https://maven.minecraftforge.net' }
-        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
-        mavenCentral()
-    }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.+', changing: true
         classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
     }
 }
@@ -14,11 +8,16 @@ buildscript {
 plugins {
     id "com.modrinth.minotaur" version "2.+"
     id "com.matthewprenger.cursegradle" version "1.4.0"
+    id "dev.combination.dotnet" version "1.0.14"
+    id "org.jetbrains.kotlin.jvm" version "1.7.10"
+    id "org.jetbrains.kotlin.plugin.serialization" version "1.7.10"
+    id "net.minecraftforge.gradle" version "5.+"
 }
 
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'maven-publish'
+apply plugin: 'kotlin'
 
 String mod_version_full = "${mc_ver}_${ver}"
 String ForgeVersion = "${mc_ver}-${forge_ver}"
@@ -30,6 +29,10 @@ version = "${mod_version_full}"
 java {
     archivesBaseName = modId
     toolchain.languageVersion = JavaLanguageVersion.of(17)
+}
+
+configurations {
+    implementation.extendsFrom(shade)
 }
 
 minecraft {
@@ -117,9 +120,13 @@ dependencies {
 
     minecraft "net.minecraftforge:forge:${ForgeVersion}"
 
-    jarJar fg.deobf(group: 'com.github.glitchfiend', name: 'TerraBlender-forge', version: '1.19-2.0.0.117') {
-        jarJar.ranged(it, "[2.0,3.0)")
-    }
+//    jarJar fg.deobf(group: 'com.github.glitchfiend', name: 'TerraBlender-forge', version: '1.19-2.0.0.117') {
+//        jarJar.ranged(it, "[2.0,3.0)")
+//    }
+
+    shade 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.10'
+    shade 'org.jetbrains.kotlin:kotlin-reflect:1.7.10'
+    shade 'org.jetbrains:annotations:23.0.0'
 
     jarJar(group: 'org.hjson', name: 'hjson', version: '3.0.0') {
         jarJar.ranged(it, "[3.0,)")
@@ -127,6 +134,14 @@ dependencies {
 }
 
 jar {
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+
+    from sourceSets.main.output
+
+    exclude()
+
+    from { configurations.shade.collect { it.isDirectory() ? it : zipTree(it) } }
+
     manifest {
         attributes([
                 "Specification-Title"     : archivesBaseName,
@@ -148,38 +163,51 @@ tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            jarJar.component(it)
+//publishing {
+//    publications {
+//        mavenJava(MavenPublication) {
+//            from components.java
+//            jarJar.component(it)
+//
+//            artifactId project.archivesBaseName
+//        }
+//    }
+//
+//    repositories {
+//        maven {
+//            url mavenUrl
+//            credentials {
+//                username mavenUsername
+//                password mavenPassword
+//            }
+//        }
+//    }
+//}
 
-            artifactId project.archivesBaseName
-        }
-    }
+//modrinth {
+//    token = modrinthToken
+//    projectId = modtinthLiquidId
+//    versionNumber = "$ver"
+//    versionType = ReleaseType
+//    uploadFile = jar
+//    gameVersions = [
+//            "$mc_ver"
+//    ]
+//    loaders = [
+//            "forge"
+//    ]
+//
+//}
 
-    repositories {
-        maven {
-            url mavenUrl
-            credentials {
-                username mavenUsername
-                password mavenPassword
-            }
-        }
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions {
+        freeCompilerArgs = Arrays.asList("-Xjvm-default=all", "-Xopt-in=kotlin.RequiresOptIn")
+        jvmTarget = "17"
+        languageVersion = "1.5"
     }
 }
-
-modrinth {
-    token = modrinthToken
-    projectId = modtinthLiquidId
-    versionNumber = "$ver"
-    versionType = ReleaseType
-    uploadFile = jar
-    gameVersions = [
-            "$mc_ver"
-    ]
-    loaders = [
-            "forge"
-    ]
-
+compileKotlin {
+    kotlinOptions {
+        languageVersion = "1.5"
+    }
 }

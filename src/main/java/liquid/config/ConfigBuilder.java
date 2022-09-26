@@ -172,11 +172,11 @@ public class ConfigBuilder {
         }
     }
 
-    public static void build(Class<?> clazz) {
+    public static synchronized void build(Class<?> clazz) {
         new ConfigBuilder(clazz);
     }
 
-    public static void build(Class<?> clazz, String name) {
+    public static synchronized void build(Class<?> clazz, String name) {
         new ConfigBuilder(clazz, name);
     }
 }
