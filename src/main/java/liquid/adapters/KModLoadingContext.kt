@@ -1,6 +1,6 @@
 package liquid.adapters
 
-import liquid.adapters.kotlin.forge.LOADING_CONTEXT
+import liquid.adapters.kotlin.forge.LoadingCTX
 import net.minecraftforge.eventbus.api.IEventBus
 
 class KModLoadingContext constructor(private val container: KModContainer) {
@@ -10,7 +10,7 @@ class KModLoadingContext constructor(private val container: KModContainer) {
 
     companion object {
         fun get() : KModLoadingContext {
-            return LOADING_CONTEXT.extension()
+            return LoadingCTX.extension()
         }
     }
 }

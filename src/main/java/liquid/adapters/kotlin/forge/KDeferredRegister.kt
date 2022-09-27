@@ -10,7 +10,7 @@ import kotlin.reflect.KProperty
 typealias KDeferredRegister<T> = DeferredRegister<T>
 
 inline fun <V, T : V> KDeferredRegister<V>.registerObject(name: String, noinline supplier: ()-> T)
-    : ReadOnlyProperty<Any?, T> {
+        : ReadOnlyProperty<Any?, T> {
     val registryObject = this.register(name, supplier)
 
     return object : ReadOnlyProperty<Any?, T>, Supplier<T>, ()-> T {
@@ -19,6 +19,5 @@ inline fun <V, T : V> KDeferredRegister<V>.registerObject(name: String, noinline
         override fun get(): T = registryObject.get()
 
         override fun invoke(): T = get()
-
     }
 }

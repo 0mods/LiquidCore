@@ -14,16 +14,16 @@ import java.util.function.Consumer
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
-inline val FORGE_BUS: IEventBus
+inline val ForgeBus: IEventBus
     get() = MinecraftForge.EVENT_BUS
 
-inline val MOD_BUS: IEventBus
+inline val ModBus: IEventBus
     get() = KModLoadingContext.get().getEventBus()
 
-inline val MOD_CONTEXT: KModLoadingContext
+inline val CTX: KModLoadingContext
     get() = KModLoadingContext.get()
 
-inline val LOADING_CONTEXT: ModLoadingContext
+inline val LoadingCTX: ModLoadingContext
     get() = ModLoadingContext.get()
 
 inline val DIST: Dist
@@ -54,11 +54,11 @@ inline fun <T> runForDist(clientTarget: () -> T, serverTarget: () -> T): T {
 }
 
 fun registerConfig(type: ModConfig.Type, spec: ForgeConfigSpec, fileName: String) {
-    LOADING_CONTEXT.registerConfig(type, spec, fileName)
+    LoadingCTX.registerConfig(type, spec, fileName)
 }
 
 fun registerConfig(type: ModConfig.Type, spec: ForgeConfigSpec) {
-    LOADING_CONTEXT.registerConfig(type, spec)
+    LoadingCTX.registerConfig(type, spec)
 }
 
 inline fun <T : GenericEvent<out F>, reified F> IEventBus.addGenericListener(
