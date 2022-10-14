@@ -1,3 +1,3 @@
 # LiquidCore
-Dependency for my mods
+Dependency for team mods
 
