@@ -108,9 +108,16 @@ public class ConfigBuilder {
                 config.add(annotation.configBranch(), categoryObject);
             }
 
-            String key = field.getName();
+            String key;
+
+            if (annotation.customName().isEmpty()) {
+                key = field.getName();
+            } else {
+                key = annotation.customName();
+            }
+
             if (categoryObject.has(key)) {
-                throw new UnsupportedOperationException("Some bad happened, duplicate key found: " + key);
+                throw new UnsupportedOperationException("Some bad news... Duplicate key found: " + key);
             }
 
             JsonObject fieldObject = new JsonObject();
