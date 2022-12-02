@@ -4,7 +4,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.client.event.InputEvent;
 
 public interface MacroHandler {
-    void keyInput(InputEvent.KeyInputEvent event);
+    void keyInput(InputEvent.Key event);
 
     void registryKey();
 

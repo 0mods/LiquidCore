@@ -18,5 +18,8 @@ public class LiquidCore {
     public LiquidCore() {
         ConfigBuilder.build(LiquidConfig.class, "liquid/cfg");
         log.info("LIQUID CORE SUCCESSFULLY STARTED");
+
+        var info = "IC Information";
+
     }
 }

@@ -163,26 +163,26 @@ tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
 
-//publishing {
-//    publications {
-//        mavenJava(MavenPublication) {
-//            from components.java
-//            jarJar.component(it)
-//
-//            artifactId project.archivesBaseName
-//        }
-//    }
-//
-//    repositories {
-//        maven {
-//            url mavenUrl
-//            credentials {
-//                username mavenUsername
-//                password mavenPassword
-//            }
-//        }
-//    }
-//}
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            jarJar.component(it)
+
+            artifactId project.archivesBaseName
+        }
+    }
+
+    repositories {
+        maven {
+            url mavenUrl
+            credentials {
+                username mavenUsername
+                password mavenPassword
+            }
+        }
+    }
+}
 
 //modrinth {
 //    token = modrinthToken
