@@ -1,4 +1,4 @@
-package liquid.objects.annotations;
+package liquid.objects.block.annotations;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

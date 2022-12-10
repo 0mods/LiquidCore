@@ -1,6 +1,7 @@
 package liquid.objects.capability.tag;
 
 import liquid.LiquidCore;
+import liquid.objects.capability.LiquidCapability;
 import liquid.objects.capability.serializer.LiquidTagSerializer;
 import liquid.objects.utils.JVMUtils;
 import net.minecraft.core.BlockPos;
@@ -8,11 +9,11 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.loading.FMLPaths;
 
 import java.io.DataInputStream;
 import java.io.File;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class TagUtils {
         }
 
         @Override
-        public CompoundTag toTag(Void tag) {
+        public CompoundTag toTag(Void object) {
             return new CompoundTag();
         }
     };
@@ -53,19 +54,69 @@ public class TagUtils {
         }
 
         @Override
-        public CompoundTag toTag(File tag) {
+        public CompoundTag toTag(File object) {
             try {
-                var stream = Files.newInputStream(tag.toPath());
+                var stream = Files.newInputStream(object.toPath());
                 var bytes = new byte[stream.available()];
                 var dataStream = new DataInputStream(stream);
                 dataStream.readFully(bytes);
-                CompoundTag compoundTag = new CompoundTag();
-                compoundTag.putString("name", tag.getName());
+                var compoundTag = new CompoundTag();
+                compoundTag.putString("name", object.getName());
                 compoundTag.putByteArray("data", bytes);
                 return compoundTag;
             } catch (Exception e) {
                 return new CompoundTag();
             }
+        }
+    };
+
+    public static final LiquidTagSerializer<LiquidCapability<?>> CAPABILITY_SERIALIZER = new LiquidTagSerializer<>("liquid_capability_serializer") {
+        @Override
+        public LiquidCapability<?> readTag(CompoundTag tag) {
+            var tags = tag.getString("cap");
+            var split = tags.split(":");
+            var location = new ResourceLocation(split[0], split[1]);
+            var capability = LiquidCapability.CAPABILITIES.get(location);
+            var capInst = capability.getDefaultInstance();
+            assert capInst != null;
+            capInst.readTag(tag.getCompound("tag"));
+            return capInst;
+        }
+
+        @Override
+        public CompoundTag toTag(LiquidCapability<?> object) {
+            var tag = new CompoundTag();
+            tag.putString("cap", object.getRegistryLocation().toString());
+            tag.put("tag", object.toTag());
+            return tag;
+        }
+    };
+
+    public static final LiquidTagSerializer<Integer> INT_SERIALIZER = new LiquidTagSerializer<Integer>("integer") {
+        @Override
+        public Integer readTag(CompoundTag tag) {
+            return tag.getInt("value");
+        }
+
+        @Override
+        public CompoundTag toTag(Integer object) {
+            var tag = new CompoundTag();
+            tag.putInt("value", object);
+            return null;
+        }
+    };
+
+    public static final LiquidTagSerializer<Float> FLOAT_SERIALIZER = new LiquidTagSerializer<Float>("float") {
+        @Override
+        public Float readTag(CompoundTag tag) {
+            return tag.getFloat("value");
+        }
+
+        @Override
+        public CompoundTag toTag(Float object) {
+            var tag = new CompoundTag();
+            tag.putFloat("value", object);
+            return null;
         }
     };
 
@@ -83,16 +134,16 @@ public class TagUtils {
         }
 
         @Override
-        public CompoundTag toTag(AABB tag) {
-            CompoundTag tag1 = new CompoundTag();
+        public CompoundTag toTag(AABB object) {
+            var tag1 = new CompoundTag();
 
-            tag1.putDouble("min_x", tag.minX);
-            tag1.putDouble("min_y", tag.minY);
-            tag1.putDouble("min_z", tag.minZ);
+            tag1.putDouble("min_x", object.minX);
+            tag1.putDouble("min_y", object.minY);
+            tag1.putDouble("min_z", object.minZ);
 
-            tag1.putDouble("max_x", tag.maxX);
-            tag1.putDouble("max_y", tag.maxY);
-            tag1.putDouble("max_z", tag.maxZ);
+            tag1.putDouble("max_x", object.maxX);
+            tag1.putDouble("max_y", object.maxY);
+            tag1.putDouble("max_z", object.maxZ);
             return tag1;
         }
     };
@@ -104,9 +155,9 @@ public class TagUtils {
         }
 
         @Override
-        public CompoundTag toTag(String tag) {
-            CompoundTag tag1 = new CompoundTag();
-            tag1.putString("value", tag);
+        public CompoundTag toTag(String object) {
+            var tag1 = new CompoundTag();
+            tag1.putString("value", object);
             return tag1;
         }
     };
@@ -118,11 +169,11 @@ public class TagUtils {
         }
 
         @Override
-        public CompoundTag toTag(BlockPos tag) {
-            CompoundTag _tag = new CompoundTag();
-            _tag.putInt("value_x", tag.getX());
-            _tag.putInt("value_y", tag.getY());
-            _tag.putInt("value_z", tag.getZ());
+        public CompoundTag toTag(BlockPos object) {
+            var _tag = new CompoundTag();
+            _tag.putInt("value_x", object.getX());
+            _tag.putInt("value_y", object.getY());
+            _tag.putInt("value_z", object.getZ());
             return _tag;
         }
     };
@@ -134,9 +185,9 @@ public class TagUtils {
         }
 
         @Override
-        public CompoundTag toTag(CompoundTag value) {
-            CompoundTag nbt = new CompoundTag();
-            nbt.put("value", value);
+        public CompoundTag toTag(CompoundTag object) {
+            var nbt = new CompoundTag();
+            nbt.put("object", object);
             return nbt;
         }
     };
@@ -145,7 +196,7 @@ public class TagUtils {
 
     public static <T> void saveList(CompoundTag tag, String name, ArrayList<T> e, LiquidTagSerializer<T> serializer) {
         tag.putInt(name + "_size", e.size());
-        int i = 0;
+        var i = 0;
         for (T value : e) {
             tag.put(name + "_val_" + i, serializer.toTag(value));
             i++;
@@ -154,7 +205,7 @@ public class TagUtils {
 
     public static <T> ArrayList<T> loadList(CompoundTag tag, String name,
                                             LiquidTagSerializer<T>serializer) {
-        int size = tag.getInt(name + "_size");
+        var size = tag.getInt(name + "_size");
         ArrayList<T> list = new ArrayList<>();
         for (int i = 0; i < size; i++) list.add(serializer.readTag(tag.getCompound(name + "_val_" + i)));
 

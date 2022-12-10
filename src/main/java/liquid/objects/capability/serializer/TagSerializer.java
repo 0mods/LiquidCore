@@ -4,5 +4,5 @@ import net.minecraft.nbt.CompoundTag;
 
 public interface TagSerializer<T> {
     T readTag(CompoundTag tag);
-    CompoundTag toTag(T tag);
+    CompoundTag toTag(T object);
 }

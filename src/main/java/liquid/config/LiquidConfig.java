@@ -1,6 +1,6 @@
 package liquid.config;
 
-import liquid.objects.annotations.Config;
+import liquid.objects.block.annotations.Config;
 
 public class LiquidConfig {
     @Config(comment = "render text on dynamic screens")
