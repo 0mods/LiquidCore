@@ -6,7 +6,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import liquid.LiquidCore;
 import liquid.objects.block.annotations.Config;
-import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.commons.io.FileUtils;
@@ -37,10 +36,8 @@ public class ConfigBuilder {
     }
 
     private void setup() {
-        ModContainer container = ModLoadingContext.get().getActiveContainer();
-        String modId = container.getModId();
 
-        final File configDir = FMLPaths.GAMEDIR.get().resolve("liquidconfig/").toFile();
+        final File configDir = FMLPaths.GAMEDIR.get().resolve("liquiddata/").resolve("config/").toFile();
 
         if (!configDir.exists()) {
             configDir.mkdirs();

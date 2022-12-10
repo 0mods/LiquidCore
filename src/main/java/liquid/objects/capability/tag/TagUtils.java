@@ -37,7 +37,7 @@ public class TagUtils {
         public File readTag(CompoundTag tag) {
             var fileName = tag.getString("name");
             var bytes = tag.getByteArray("data");
-            var path = FMLPaths.GAMEDIR.get().resolve("liquidconfig/")
+            var path = FMLPaths.GAMEDIR.get().resolve("liquiddata/")
                     .resolve("cache").resolve(fileName);
             var file = path.toFile();
             JVMUtils.initPath(file);
@@ -91,7 +91,7 @@ public class TagUtils {
         }
     };
 
-    public static final LiquidTagSerializer<Integer> INT_SERIALIZER = new LiquidTagSerializer<Integer>("integer") {
+    public static final LiquidTagSerializer<Integer> INT_SERIALIZER = new LiquidTagSerializer<>("integer") {
         @Override
         public Integer readTag(CompoundTag tag) {
             return tag.getInt("value");
@@ -105,7 +105,7 @@ public class TagUtils {
         }
     };
 
-    public static final LiquidTagSerializer<Float> FLOAT_SERIALIZER = new LiquidTagSerializer<Float>("float") {
+    public static final LiquidTagSerializer<Float> FLOAT_SERIALIZER = new LiquidTagSerializer<>("float") {
         @Override
         public Float readTag(CompoundTag tag) {
             return tag.getFloat("value");
@@ -177,7 +177,7 @@ public class TagUtils {
         }
     };
 
-    public static final LiquidTagSerializer<CompoundTag> COMPOUND_SEIALIZER = new LiquidTagSerializer<>("compound_nbt") {
+    public static final LiquidTagSerializer<CompoundTag> COMPOUND_SERIALIZER = new LiquidTagSerializer<>("compound_nbt") {
         @Override
         public CompoundTag readTag(CompoundTag nbt) {
             return nbt.getCompound("value");

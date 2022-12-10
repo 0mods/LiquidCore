@@ -1,7 +1,10 @@
 package liquid.objects.capability;
 
+import liquid.objects.capability.packet.LiquidPacket;
+import liquid.objects.capability.packet.LiquidPackets;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 
@@ -34,6 +37,9 @@ public abstract class LiquidCapability<T extends LiquidCapability<?>> implements
 
     @Override
     public void updateCapability(Player player) {
+        LiquidPacket<LiquidCapability<?>> packet = LiquidPackets.CAPABILITY_PACKET;
 
+        if (player.level.isClientSide) packet.sendToServer(this);
+        else packet.sendToClient((ServerPlayer) player, this);
     }
 }

@@ -1,4 +1,4 @@
-package liquid.objects.capability;
+package liquid.objects.capability.packet;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerPlayer;
