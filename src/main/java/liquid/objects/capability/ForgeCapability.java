@@ -6,6 +6,11 @@ import net.minecraftforge.common.capabilities.Capability;
 import javax.annotation.Nullable;
 import java.util.concurrent.Callable;
 
+/**
+ * @author AlgorithmLX
+ * @reason New capability is not compatible in my code
+ */
+
 public class ForgeCapability<T> extends Capability<T> {
     private final Callable<? extends T> factory;
 
@@ -20,7 +25,7 @@ public class ForgeCapability<T> extends Capability<T> {
             return this.factory.call();
         } catch (Exception e) {
             Throwables.throwIfUnchecked(e);
-            throw  new RuntimeException(e);
+            throw new RuntimeException(e);
         }
     }
 }
