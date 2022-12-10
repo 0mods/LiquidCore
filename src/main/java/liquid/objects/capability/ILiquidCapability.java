@@ -9,7 +9,7 @@ public interface ILiquidCapability<T extends LiquidCapability<?>> {
     ForgeCapability<T> getCapability();
     CompoundTag toTag();
     void readTag(CompoundTag tag);
-    void onEntityDeath(Entity player, Entity oldPlayer);
+    void onEntityDeath(Entity entity, Entity oldEntity);
     ResourceLocation getRegistryLocation();
     void updateCapability();
     void updateCapability(Player player);
