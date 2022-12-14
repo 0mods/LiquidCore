@@ -8,3 +8,5 @@ pluginManagement {
 }
 
 rootProject.name = 'liquid1.19'
+include 'core'
+include 'adapter'

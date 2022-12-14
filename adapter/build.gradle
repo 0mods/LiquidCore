@@ -1,0 +1,5 @@
+dependencies {
+    if (findProject(":core") != null) {
+        implementation project(":core")
+    }
+}
