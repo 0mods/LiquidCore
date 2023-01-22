@@ -251,6 +251,7 @@ allprojects {
 
     minecraft {
         mappings channel: 'official', version: "${mc_ver}"
+        accessTransformer = file('core/src/main/resources/META-INF/accesstransformer.cfg')
 
         runs {
             client {
