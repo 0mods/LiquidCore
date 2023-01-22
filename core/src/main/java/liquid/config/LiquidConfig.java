@@ -9,6 +9,6 @@ public class LiquidConfig {
     @Config(comment = "Color on dynamic screens")
     public static String colorInText = "0x000000";
 
-    @Config(comment = "Enable Food Saturation", customName = "foodSaturation")
-    public static Boolean fs = false;
+    @Config(comment = "Draw custom starter screen", customName = "starterScreen", configBranch = "minecraftModification")
+    public static Boolean startScreen = false;
 }
