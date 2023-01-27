@@ -43,7 +43,7 @@ class KModLanguageProvider : IModLanguageProvider {
         override fun <T> loadMod(info: IModInfo, modFileScanResults: ModFileScanData, gameLayer: ModuleLayer): T {
 
             try {
-                val ktContainer = Class.forName("liquid.adapters.KModContainer", true,
+                val ktContainer = Class.forName("KModContainer", true,
                     Thread.currentThread().contextClassLoader)
                 LOGGER.debug("Loading KModContainer from classloader ${Thread.currentThread()
                     .contextClassLoader} - got ${ktContainer.classLoader}}")

@@ -1,5 +1,5 @@
 dependencies {
-    if (findProject(":core") != null) {
-        implementation project(":core")
+    if (findProject(":liquid1.19") != null) {
+        implementation project(":liquid1.19")
     }
 }

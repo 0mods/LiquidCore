@@ -12,7 +12,6 @@ import net.minecraftforge.fml.ModLoadingException
 import net.minecraftforge.fml.ModLoadingStage
 import net.minecraftforge.fml.event.IModBusEvent
 import net.minecraftforge.forgespi.language.IModInfo
-import net.minecraftforge.forgespi.language.IModLanguageProvider
 import net.minecraftforge.forgespi.language.ModFileScanData
 import java.util.*
 import java.util.function.Consumer

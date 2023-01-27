@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 @Mod(LiquidCore.ModId)
 public class LiquidCore {
     public static final Logger log = LoggerFactory.getLogger("LiquidLogger");
-    public static final String ModId = "liquid";
+    public static final String ModId = "java/liquid";
 
     public static MenuType<DynamicContainer> CONTAINER_TYPE;
 

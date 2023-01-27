@@ -18,7 +18,7 @@ import java.util.function.Consumer
 import java.util.function.Supplier
 
 class KModLanguageProvider : IModLanguageProvider {
-    override fun name() = "liquid"
+    override fun name() = "java/liquid"
     val MOD_ANNOTATION: Type = Type.getType("Lnet/minecraftforge/fml/common/Mod;")
     private val LOGGER : Logger = LiquidCore.log;
 
@@ -43,7 +43,7 @@ class KModLanguageProvider : IModLanguageProvider {
         override fun <T> loadMod(info: IModInfo, modFileScanResults: ModFileScanData, gameLayer: ModuleLayer): T {
 
             try {
-                val ktContainer = Class.forName("liquid.adapters.KModContainer", true,
+                val ktContainer = Class.forName("KModContainer", true,
                     Thread.currentThread().contextClassLoader)
                 LOGGER.debug("Loading KModContainer from classloader ${Thread.currentThread()
                     .contextClassLoader} - got ${ktContainer.classLoader}}")
