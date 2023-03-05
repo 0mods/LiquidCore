@@ -1,5 +1,0 @@
-dependencies {
-    if (findProject(":liquid1.19") != null) {
-        implementation project(":liquid1.19")
-    }
-}

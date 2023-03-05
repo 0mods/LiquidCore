@@ -9,6 +9,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.fml.loading.FMLPaths;
 
 import java.io.DataInputStream;
@@ -69,27 +71,27 @@ public class TagUtils {
         }
     };
 
-    public static final LiquidTagSerializer<LiquidCapability<?>> CAPABILITY_SERIALIZER = new LiquidTagSerializer<>("liquid_capability_serializer") {
-        @Override
-        public LiquidCapability<?> readTag(CompoundTag tag) {
-            var tags = tag.getString("cap");
-            var split = tags.split(":");
-            var location = new ResourceLocation(split[0], split[1]);
-            var capability = LiquidCapability.CAPABILITIES.get(location);
-            var capInst = capability.getDefaultInstance();
-            assert capInst != null;
-            capInst.readTag(tag.getCompound("tag"));
-            return capInst;
-        }
-
-        @Override
-        public CompoundTag toTag(LiquidCapability<?> object) {
-            var tag = new CompoundTag();
-            tag.putString("cap", object.getRegistryLocation().toString());
-            tag.put("tag", object.toTag());
-            return tag;
-        }
-    };
+//    public static final LiquidTagSerializer<LiquidCapability<?>> CAPABILITY_SERIALIZER = new LiquidTagSerializer<>("liquid_capability_serializer") {
+//        @Override
+//        public LiquidCapability<?> readTag(CompoundTag tag) {
+//            var tags = tag.getString("cap");
+//            var split = tags.split(":");
+//            var location = new ResourceLocation(split[0], split[1]);
+//            var capability = LiquidCapability.CAPABILITIES.get(location);
+//            var capInst = CapabilityManager.get(new CapabilityToken<>() {});
+//            assert capInst != null;
+//            capInst.readTag(tag.getCompound("tag"));
+//            return capInst;
+//        }
+//
+//        @Override
+//        public CompoundTag toTag(LiquidCapability<?> object) {
+//            var tag = new CompoundTag();
+//            tag.putString("cap", object.getRegistryLocation().toString());
+//            tag.put("tag", object.toTag());
+//            return tag;
+//        }
+//    };
 
     public static final LiquidTagSerializer<Integer> INT_SERIALIZER = new LiquidTagSerializer<>("integer") {
         @Override

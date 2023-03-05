@@ -7,12 +7,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.common.capabilities.Capability;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public abstract class LiquidCapability<T extends LiquidCapability<?>> implements ILiquidCapability<LiquidCapability<?>> {
-    public static final Map<ResourceLocation, ForgeCapability<LiquidCapability<?>>> CAPABILITIES = new HashMap<>();
+    public static final Map<ResourceLocation, Capability<LiquidCapability<?>>> CAPABILITIES = new HashMap<>();
     private final ResourceLocation resourceLocation;
 
     public LiquidCapability(ResourceLocation resourceLocation) {
@@ -37,9 +38,10 @@ public abstract class LiquidCapability<T extends LiquidCapability<?>> implements
 
     @Override
     public void updateCapability(Player player) {
-        LiquidPacket<LiquidCapability<?>> packet = LiquidPackets.CAPABILITY_PACKET;
-
-        if (player.level.isClientSide) packet.sendToServer(this);
-        else packet.sendToClient((ServerPlayer) player, this);
+//        LiquidPacket<LiquidCapability<?>> packet = LiquidPackets.CAPABILITY_PACKET;
+//
+//        if (player.level.isClientSide) packet.sendToServer(this);
+//        else packet.sendToClient((ServerPlayer) player, this);
     }
+
 }

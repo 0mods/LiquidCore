@@ -12,7 +12,7 @@ Little api for my mods
 [[dependencies.liquid]]
    modId="forge"
    mandatory=true
-   versionRange="[41,)"
+   versionRange="[44,)"
    ordering="NONE"
    side="BOTH"
 # Here's another dependency
@@ -20,6 +20,6 @@ Little api for my mods
    modId="minecraft"
    mandatory=true
    # This version range declares a minimum of the current minecraft version up to but not including the next major version
-   versionRange="[1.19,)"
+   versionRange="[1.19.3,)"
    ordering="NONE"
    side="BOTH"
