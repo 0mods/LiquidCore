@@ -1,6 +1,7 @@
 package liquid.mixin;
 
 import liquid.LiquidCore;
+import liquid.objects.container.Register;
 import liquid.objects.container.client.DynamicScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.Screen;
@@ -16,6 +17,6 @@ public class MenuScreensMixin {
     public static <M extends AbstractContainerMenu, U extends Screen & MenuAccess<M>> void register(MenuType<? extends M> pType, MenuScreens.ScreenConstructor<M, U> pFactory) {}
 
     static {
-        register(LiquidCore.CONTAINER_TYPE, DynamicScreen::new);
+        register(Register.DC.get(), DynamicScreen::new);
     }
 }

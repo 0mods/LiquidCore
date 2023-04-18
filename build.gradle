@@ -33,6 +33,10 @@ configurations {
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
+mixin {
+    add sourceSets.main, "liquid.refmap.json"
+}
+
 minecraft {
     mappings channel: 'official', version: "${mc_ver}"
 
@@ -100,20 +104,12 @@ dependencies {
     jarJar(group: 'org.hjson', name: 'hjson', version: '3.0.0') {
         jarJar.ranged(it, "[3.0,)")
     }
-    jarJar fg.deobf(group: 'com.github.glitchfiend', name: 'TerraBlender-forge', version: "$mc_ver-$tb_version") {
+    jarJar fg.deobf(group: 'com.github.glitchfiend', name: 'TerraBlender-forge', version: "$mc_ver-2.+") {
         jarJar.ranged(it, "[2.1.0.134,)")
     }
-    jarJar fg.deobf("com.algorithmlx:LiquidKT:1.0") {
+    jarJar fg.deobf("com.algorithmlx:LiquidKT:1.1") {
         jarJar.ranged(it, "[1.0,)")
     }
-
-    implementation('org.hjson:hjson:3.0.0')
-    implementation fg.deobf("com.github.glitchfiend:TerraBlender-forge:$mc_ver-$tb_version")
-    implementation fg.deobf("com.algorithmlx:LiquidKT:1.0")
-}
-
-mixin {
-    add sourceSets.main, "liquid.refmap.json"
 }
 
 afterEvaluate {

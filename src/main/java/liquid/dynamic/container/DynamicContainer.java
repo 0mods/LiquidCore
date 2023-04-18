@@ -2,11 +2,10 @@ package liquid.dynamic.container;
 
 import liquid.LiquidCore;
 import liquid.objects.container.AdvancedContainerMenu;
-import liquid.objects.data.container.DynamicContainerData;
+import liquid.objects.container.Register;
 import liquid.objects.data.scale.ScaleArray.*;
 import liquid.objects.data.tag.ContainerTag;
 import liquid.dynamic.item.DynamicItem;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.SimpleContainer;
@@ -23,7 +22,7 @@ public class DynamicContainer extends AdvancedContainerMenu {
     int titleSpace = 10;
 
     public DynamicContainer(int windowId, Inventory playerInventory, InteractionHand hand) {
-        super(LiquidCore.CONTAINER_TYPE, windowId, playerInventory);
+        super(Register.DC.get(), windowId, playerInventory);
         this.player = playerInventory.player;
         this.hand = hand;
         ItemStack stack = player.getItemInHand(hand);
