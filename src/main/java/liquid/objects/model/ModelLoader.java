@@ -2,8 +2,6 @@ package liquid.objects.model;
 
 import liquid.objects.model.resource.LiquidResourceGenPack;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.lang.reflect.Field;
@@ -31,7 +29,7 @@ import java.util.HashMap;
  *         <p>
  *        <code>ModelLoader.initializeSystem(Registry.class)</code>
  */
-
+@Deprecated(forRemoval = true)
 public class ModelLoader {
     private final Class<?> className;
 
@@ -50,9 +48,22 @@ public class ModelLoader {
             var field = rGen.getKey();
             var value = rGen.getValue();
 
-            if (field.getDeclaringClass() == RegistryObject.class) {
-                if (value.type() == ResourceGenType.ITEM) LiquidResourceGenPack.genItemModels.add(ForgeRegistries.ITEMS.getRegistryName());
-                if (value.type() == ResourceGenType.BLOCK) LiquidResourceGenPack.genBlockModel.add(ForgeRegistries.BLOCKS.getRegistryName());
+//            if (field.getDeclaringClass() == RegistryObject.class) {
+//                if (value.type() == ResourceGenType.ITEM) LiquidResourceGenPack.genItemModels.add(ForgeRegistries.ITEMS.getRegistryName());
+//                if (value.type() == ResourceGenType.BLOCK) LiquidResourceGenPack.genBlockModel.add(ForgeRegistries.BLOCKS.getRegistryName());
+//            }
+
+            if (field.getDeclaringClass().equals(RegistryObject.class)) {
+                RegistryObject<Item> regObj = null;
+
+                try {
+                    regObj = (RegistryObject<Item>) field.get(RegistryObject.class.newInstance());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                if (value.type() == ResourceGenType.ITEM) LiquidResourceGenPack.genItemModels.add(regObj.getId());
+                if (value.type() == ResourceGenType.BLOCK) LiquidResourceGenPack.genBlockModel.add(regObj.getId());
             }
         }
     }

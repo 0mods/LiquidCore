@@ -2,9 +2,7 @@ package liquid;
 
 import liquid.config.ConfigBuilder;
 import liquid.config.LiquidConfig;
-import liquid.dynamic.container.DynamicContainer;
 import liquid.objects.container.Register;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.fml.common.Mod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
