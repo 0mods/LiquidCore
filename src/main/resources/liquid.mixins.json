@@ -4,9 +4,7 @@
   "package": "liquid.mixin",
   "compatibilityLevel": "JAVA_8",
   "refmap": "liquid.refmap.json",
-  "mixins": [
-//    "MenuTypeMixin"
-  ],
+  "mixins": [],
   "client": [
     "MenuScreensMixin"
   ],

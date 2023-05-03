@@ -1,7 +1,15 @@
-package liquid.keybind;
+package liquid.keys;
 
+import org.lwjgl.glfw.GLFW;
+
+@Deprecated(forRemoval = true, since = "LC-1.2")
+/**
+ * @deprecated Use keys from {@link GLFW}
+ *
+ * @apiNote This is not correct! Don't use!
+ * @apiNote This class has been deleted in LC-1.2 or LC-1.0 on MC1.20
+ */
 public class KeyBindings {
-    //Why enum is doesnt work? :(
     public static final int LEFT_MOUSE = 1;
     public static final int RIGHT_MOUSE = 2;
     public static final int MIDDLE_MOUSE = 3;

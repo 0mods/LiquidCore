@@ -19,18 +19,16 @@ public class DynamicScreen extends AbstractContainerScreen<DynamicContainer> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(LiquidCore.ModId, "textures/dynamic_gui.png");
     private final int textColor = Integer.decode(LiquidConfig.colorInText);
 
-
     public DynamicScreen(DynamicContainer pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
 
         Size size = pMenu.getSize();
-        this.imageWidth = size.width;
-        this.imageHeight = size.height;
+        this.imageWidth = size.width();
+        this.imageHeight = size.height();
         this.titleLabelY = 7;
-        this.inventoryLabelX = pMenu.getPlayerSlots(size, 0, 0).x;
+        this.inventoryLabelX = pMenu.getPlayerSlots(size, 0, 0).x();
         this.inventoryLabelY = this.imageHeight - 94;
     }
-
 
     @Override
     protected void renderBg(@NotNull PoseStack pPoseStack, float pPartialTick, int pMouseX, int pMouseY) {
@@ -69,7 +67,7 @@ public class DynamicScreen extends AbstractContainerScreen<DynamicContainer> {
         RenderSystem.clearColor(red, green, blue, alpha);
         RenderSystem.setShaderTexture(0, TEXTURE);
 
-        int x = bounds.x, y = bounds.y, width = bounds.width, height = bounds.height;
+        int x = bounds.x(), y = bounds.y(), width = bounds.width(), height = bounds.height();
         int xTextureOffset = 0;
         int yTextureOffset = 66;
 

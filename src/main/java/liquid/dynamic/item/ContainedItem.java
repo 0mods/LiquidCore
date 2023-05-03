@@ -12,9 +12,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-public class DynamicItem extends Item {
+public class ContainedItem extends Item {
     private final DynamicContainerData data;
-    public DynamicItem(DynamicContainerData data, Item.Properties properties) {
+    private static final Properties properties = new Properties();
+
+    public ContainedItem(DynamicContainerData data) {
         super(properties);
         this.data = data;
     }
