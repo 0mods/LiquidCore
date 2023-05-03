@@ -1,0 +1,3 @@
+[submodule "src/main/java/liquid/adapters"]
+	path = src/main/java/liquid/adapters
+	url = https://github.com/0mods/LiquidKT.git
