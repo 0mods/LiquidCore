@@ -108,8 +108,14 @@ dependencies {
         jarJar.ranged(it, "[2.1.0.134,)")
     }
     jarJar fg.deobf("com.algorithmlx:LiquidKT:1.1") {
-        jarJar.ranged(it, "[1.0,)")
+        jarJar.ranged(it, "[1.1,)")
     }
+
+    jarJar("net.sf.jni4net:jni4net.j:0.8.8.0") {
+        jarJar.ranged(it, "[0.8,)")
+    }
+
+    implementation("net.sf.jni4net:jni4net.j:0.8.8.0")
 }
 
 afterEvaluate {
@@ -139,15 +145,6 @@ jar {
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
-}
-
-task jarJarRelease {
-    doLast {
-        tasks.jarJar {
-            classifier = ''
-        }
-    }
-    finalizedBy tasks.jarJar
 }
 
 java {
